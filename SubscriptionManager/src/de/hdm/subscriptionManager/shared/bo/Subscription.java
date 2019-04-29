@@ -22,6 +22,8 @@ public class Subscription extends BusinessObject{
     private Date startMonth = null;
 
     private Date endMonth = null;
+    
+    private int userID = 0;
 
     public String getName() {
 	return name;
@@ -74,5 +76,12 @@ public class Subscription extends BusinessObject{
 	return 0;
     }
 
+    public int getUserID() {
+	return userID;
+    }
+    
+    public void setUserID(int userID) {
+	this.userID = userID;
+    }
 
 }

@@ -10,6 +10,8 @@ public class SubscriptionGroup extends BusinessObject {
     private static final long serialVersionUID = 1L;
 
     private String name = "";
+    
+    private int userID = 0;
 
     // ArrayList welche die einzelnen Subscriptions einer Gruppe enthält
     private ArrayList<Subscription> subscriptionArrayList = null;
@@ -42,5 +44,13 @@ public class SubscriptionGroup extends BusinessObject {
 	    }
 	}
 	return amount;
+    }
+    
+    public int getUserID() {
+	return userID;
+    }
+    
+    public void setUserID(int userID) {
+	this.userID = userID;
     }
 }

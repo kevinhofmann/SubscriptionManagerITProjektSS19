@@ -1,7 +1,65 @@
 /** Add css rules here for your application. */
 
+html {
+	background-image: url("/images/backgroundimage.jpg");
+	background-repeat: repeat;
+	background-size: cover;
+}
 
-/** Example rules used by the template application (remove for your app) */
+
+#main {
+	width: 70%;
+	min-height: 50em;
+	margin-top: 4%;
+	background-color: white;
+	margin-left: 15%;
+	box-shadow: 0px 5px 9.5px grey;
+}
+
+body {
+	background-color: transparent !important;
+}
+
+#header {
+	font-size: 3em;
+	color: #404040;
+	font-family: 'Fredoka One', cursive;
+	height: 80px;
+	width: 100%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	background: linear-gradient(to top right, #ff6300 0%, #ff4600 100%);
+	opacity: 0.9;
+	box-shadow: 0px 5px 9.5px grey;
+	background-size: contain;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#topofcontent {
+	width: 100%;
+	height: 50px;
+}
+
+#leftmenu {
+	width: 20%;
+	height: 48em;
+	background-color: rgba(255, 255, 255, 0.8);
+	box-shadow: 3px 2px 2px grey;
+	display: inline-block;
+}
+
+#leftmenu table {
+	width: 100%;
+}
+
+#content {
+	width: 80%;
+	height: 48em;
+	display: inline-block;
+}
+
 h1 {
   font-size: 2em;
   font-weight: bold;
@@ -10,10 +68,52 @@ h1 {
   text-align: center;
 }
 
-.sendButton {
-  display: block;
-  font-size: 16pt;
+h2 {
+	font-size: 0.4em !important;
+	display: contents;
+	opacity: 0.5;
+	font-weight: lighter;
 }
+
+
+/** BUTTONS */
+
+.subSelectionButton {
+	background: linear-gradient(to top right, #ff6300 0%, #ff4600 100%);
+	width: 7em;
+	height: 3em;
+	border-radius: 2px;
+	border: 0px;
+	display: inline-block;
+	color: #333333;
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 600;
+	text-align: center;
+	opacity: 0.8;
+	margin: 2px 2px;
+}
+
+.subSelectionButton:hover {
+	opacity: 0.9;
+	transform: scale(1.02);
+	color: #1a1a1a;
+}
+
+.subSelectionButton:active {
+	opacity: 0.9;
+	transform: scale(1.02);
+	color: #1a1a1a;
+}
+	
+.subSelectionButtonPanel table {
+	width: 100%;
+}
+
+.subSelectionButtonPanel tbody tr td:first-child {
+	text-align: right; 
+}
+
+
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
@@ -32,3 +132,4 @@ h1 {
 #closeButton {
   margin: 15px 6px 6px;
 }
+
