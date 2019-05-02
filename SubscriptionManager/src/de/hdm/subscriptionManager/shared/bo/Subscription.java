@@ -19,9 +19,9 @@ public class Subscription extends BusinessObject{
 
     private String note = "";
 
-    private Date startMonth = null;
+    private Date startDate = null;
 
-    private Date endMonth = null;
+    private boolean cancellationRelevance = false;
     
     private int userID = 0;
 
@@ -50,19 +50,19 @@ public class Subscription extends BusinessObject{
     }
 
     public Date getStartMonth() {
-	return startMonth;
+	return startDate;
     }
 
     public void setStartMonth(Date startMonth) {
-	this.startMonth = startMonth;
+	this.startDate = startMonth;
     }
 
-    public Date getEndMonth() {
-	return endMonth;
+    public boolean getCancellationRelevance() {
+	return cancellationRelevance;
     }
 
-    public void setEndMonth(Date endMonth) {
-	this.endMonth = endMonth;
+    public void setCancellationRelevance(boolean cancellationRelevance) {
+	this.cancellationRelevance = cancellationRelevance;
     }
 
 

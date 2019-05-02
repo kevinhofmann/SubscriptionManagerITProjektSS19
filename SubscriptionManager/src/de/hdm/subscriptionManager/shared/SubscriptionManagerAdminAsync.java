@@ -23,7 +23,7 @@ public interface SubscriptionManagerAdminAsync {
 
     void updateSubscription(Subscription s, AsyncCallback<Void> callback);
 
-    void createSubscription(String name, float price, String note, Date startMonth, Date endMonth, int userID,
+    void createSubscription(String name, float price, String note, Date startMonth, Boolean cancellationRelevance, int userID,
 	    AsyncCallback<Subscription> callback);
 
     void deleteSubscriptionGroup(SubscriptionGroup sg, AsyncCallback<Void> callback);

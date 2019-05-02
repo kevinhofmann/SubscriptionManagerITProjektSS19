@@ -23,7 +23,7 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	
 	public User createUser(String mail) throws IllegalArgumentException;
 	
-	public Subscription createSubscription(String name,float price, String note, Date startMonth, Date endMonth, int userID) throws IllegalArgumentException;
+	public Subscription createSubscription(String name,float price, String note, Date startMonth, Boolean cancellationRelevance, int userID) throws IllegalArgumentException;
 	
 	public SubscriptionGroup createSubscriptionGroup(String name, int userID) throws IllegalArgumentException;
 

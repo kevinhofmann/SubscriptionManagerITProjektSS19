@@ -1,7 +1,13 @@
 package de.hdm.subscriptionManager.client;
 
+import de.hdm.subscriptionManager.server.db.DBConnection;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdmin;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
@@ -42,6 +48,8 @@ public class SubscriptionManager implements EntryPoint {
      */
     public void onModuleLoad() {
 	LeftMenu lm = new LeftMenu();
+	
+
 //	final Button sendButton = new Button("Send");
 //	final TextBox nameField = new TextBox();
 //	nameField.setText("GWT User");
@@ -151,3 +159,4 @@ public class SubscriptionManager implements EntryPoint {
 //	nameField.addKeyUpHandler(handler);
     }
 }
+

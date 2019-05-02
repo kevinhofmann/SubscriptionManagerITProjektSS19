@@ -102,7 +102,7 @@ h2 {
 .subSelectionButton:active {
 	opacity: 0.9;
 	transform: scale(1.02);
-	color: #1a1a1a;
+	color: black;
 }
 	
 .subSelectionButtonPanel table {
