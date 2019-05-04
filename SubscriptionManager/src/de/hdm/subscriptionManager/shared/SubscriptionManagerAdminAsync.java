@@ -13,7 +13,7 @@ public interface SubscriptionManagerAdminAsync {
 
     void init(AsyncCallback<Void> callback);
 
-    void createUser(String mail, AsyncCallback<User> callback);
+    void createUser(String firstName, String lastName, String mail, AsyncCallback<User> callback);
 
     void deleteSubscription(Subscription s, AsyncCallback<Void> callback);
 

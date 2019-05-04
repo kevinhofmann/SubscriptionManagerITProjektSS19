@@ -1,5 +1,6 @@
 package de.hdm.subscriptionManager.client;
 
+import de.hdm.subscriptionManager.client.gui.CreateSubscriptionForm;
 import de.hdm.subscriptionManager.server.db.DBConnection;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdmin;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
@@ -29,25 +30,18 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-@SuppressWarnings("unused")
+@SuppressWarnings("deprecation")
 public class SubscriptionManager implements EntryPoint {
-    /**
-     * The message displayed to the user when the server cannot be reached or
-     * returns an error.
-     */
-    private static final String SERVER_ERROR = "An error occurred while "
-	    + "attempting to contact the server. Please check your network " + "connection and try again.";
 
-    /**
-     * Create a remote service proxy to talk to the server-side Greeting service.
-     */
-  //  private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = GWT.create(SubscriptionManager.class);
+
+   private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
 
     /**
      * This is the entry point method.
      */
     public void onModuleLoad() {
 	LeftMenu lm = new LeftMenu();
+	CreateSubscriptionForm csf = new CreateSubscriptionForm();
 	
 
 //	final Button sendButton = new Button("Send");

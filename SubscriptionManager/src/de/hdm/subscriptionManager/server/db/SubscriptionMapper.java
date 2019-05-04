@@ -16,7 +16,7 @@ public class SubscriptionMapper {
     private static SubscriptionMapper subscriptionMapper = null;
     
     protected SubscriptionMapper() {
-    }
+    };
     
     public static SubscriptionMapper subscriptionMapper() {
 	if(subscriptionMapper == null) {
@@ -53,8 +53,9 @@ public class SubscriptionMapper {
 				stmt1.setString(2, subscription.getName());
 				stmt1.setFloat(3, subscription.getPrice());
 				stmt1.setString(4, subscription.getNote());
-				stmt1.setBoolean(5, subscription.getCancellationRelevance());
-				stmt1.setInt(6, subscription.getUserID());
+				stmt1.setDate(5, subscription.getStartMonth());
+				stmt1.setBoolean(6, subscription.getCancellationRelevance());
+				stmt1.setInt(7, subscription.getUserID());
 				
 				System.out.println(stmt);
 				stmt1.executeUpdate();

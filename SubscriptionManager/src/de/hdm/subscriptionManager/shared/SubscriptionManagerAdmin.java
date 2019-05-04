@@ -10,7 +10,8 @@ import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 import de.hdm.subscriptionManager.shared.bo.User;
 
-@RemoteServiceRelativePath("subscriptionManager")
+
+@RemoteServiceRelativePath("subscriptionmanagerservice")
 public interface SubscriptionManagerAdmin extends RemoteService {
     
 	/**
@@ -21,7 +22,7 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	 */
 	public void init() throws IllegalArgumentException;
 	
-	public User createUser(String mail) throws IllegalArgumentException;
+	public User createUser(String firstName, String lastName, String mail) throws IllegalArgumentException;
 	
 	public Subscription createSubscription(String name,float price, String note, Date startMonth, Boolean cancellationRelevance, int userID) throws IllegalArgumentException;
 	

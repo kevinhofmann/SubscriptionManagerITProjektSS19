@@ -7,6 +7,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 import de.hdm.subscriptionManager.server.db.SubscriptionGroupMapper;
 import de.hdm.subscriptionManager.server.db.SubscriptionMapper;
+import de.hdm.subscriptionManager.server.db.UserMapper;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdmin;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
@@ -15,6 +16,8 @@ import de.hdm.subscriptionManager.shared.bo.User;
 @SuppressWarnings("serial")
 public class SubscriptionManagerImpl extends RemoteServiceServlet implements SubscriptionManagerAdmin {
 
+    
+    private UserMapper userMapper = null;
     
     private SubscriptionMapper subscriptionMapper = null;
     
@@ -26,14 +29,19 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     }
     
     public void init() throws IllegalArgumentException {
-	
+	this.userMapper = UserMapper.userMapper();
+	this.subscriptionMapper = SubscriptionMapper.subscriptionMapper();
+	this.subscriptionGroupMapper = SubscriptionGroupMapper.subGroupMapper();
     }
     
     
     @Override
-    public User createUser(String mail) throws IllegalArgumentException {
-	// TODO Auto-generated method stub
-	return null;
+    public User createUser(String firstName, String lastName, String mail) throws IllegalArgumentException {
+	User user = new User();
+	user.setFirstName(firstName);
+	user.setLastName(lastName);
+	user.setMail(mail);
+	return this.userMapper.createUser(user);
     }
 
     @Override
