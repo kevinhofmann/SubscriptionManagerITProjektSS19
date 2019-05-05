@@ -13,7 +13,7 @@
   
     <servlet-mapping>
     <servlet-name>subscriptionServlet</servlet-name>
-    <url-pattern>/subscriptionmanager/subscriptionmanagerservice/</url-pattern>
+    <url-pattern>/subscriptionmanager/subscriptionmanagerservice</url-pattern>
   </servlet-mapping>
   
   

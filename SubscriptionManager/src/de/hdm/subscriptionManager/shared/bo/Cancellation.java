@@ -9,23 +9,24 @@ public class Cancellation extends BusinessObject {
      */
     private static final long serialVersionUID = 1L;
 
-    private Date dateOfNotice = null;
+    private Date expirationDate = null;
     
     private int cancellationPeriod = 0;
 
+    private int subscriptionID = 0;
 
     /**
      * @return the dateOfNotice
      */
-    public Date getDateOfNotice() {
-	return dateOfNotice;
+    public Date getExpirationDate() {
+	return expirationDate;
     }
 
     /**
      * @param dateOfNotice the dateOfNotice to set
      */
-    public void setDateOfNotice(Date dateOfNotice) {
-	this.dateOfNotice = dateOfNotice;
+    public void setExpirationDate(Date expirationDate) {
+	this.expirationDate = expirationDate;
     }
     
     /**
@@ -40,6 +41,14 @@ public class Cancellation extends BusinessObject {
      */
     public void setCancellationPeriod(int cancellationPeriod) {
 	this.cancellationPeriod = cancellationPeriod;
+    }
+
+    public int getSubscriptionID() {
+	return subscriptionID;
+    }
+
+    public void setSubscriptionID(int subscriptionID) {
+	this.subscriptionID = subscriptionID;
     }
 
 }

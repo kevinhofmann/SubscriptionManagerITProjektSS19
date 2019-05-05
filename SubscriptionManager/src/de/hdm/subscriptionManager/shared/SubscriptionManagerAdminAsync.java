@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import de.hdm.subscriptionManager.shared.bo.Cancellation;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 import de.hdm.subscriptionManager.shared.bo.User;
@@ -23,9 +24,11 @@ public interface SubscriptionManagerAdminAsync {
 
     void updateSubscription(Subscription s, AsyncCallback<Void> callback);
 
-    void createSubscription(String name, float price, String note, Date startMonth, Boolean cancellationRelevance, int userID,
+    void createSubscription(String name, float price, String note, java.util.Date startDate, Boolean cancellationRelevance, int userID,
 	    AsyncCallback<Subscription> callback);
 
+    void createCancellation(Date expirationDate, int cancellationPeriod, int subscriptionID, AsyncCallback<Cancellation> callback);
+    
     void deleteSubscriptionGroup(SubscriptionGroup sg, AsyncCallback<Void> callback);
 
     void addSubscriptionToGroup(Subscription s, SubscriptionGroup sg, AsyncCallback<Void> callback);

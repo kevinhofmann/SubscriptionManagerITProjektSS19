@@ -2,13 +2,16 @@ package de.hdm.subscriptionManager.server;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+import de.hdm.subscriptionManager.server.db.CancellationMapper;
 import de.hdm.subscriptionManager.server.db.SubscriptionGroupMapper;
 import de.hdm.subscriptionManager.server.db.SubscriptionMapper;
 import de.hdm.subscriptionManager.server.db.UserMapper;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdmin;
+import de.hdm.subscriptionManager.shared.bo.Cancellation;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 import de.hdm.subscriptionManager.shared.bo.User;
@@ -16,12 +19,15 @@ import de.hdm.subscriptionManager.shared.bo.User;
 @SuppressWarnings("serial")
 public class SubscriptionManagerImpl extends RemoteServiceServlet implements SubscriptionManagerAdmin {
 
+    Logger logger = ServersideSettings.getLogger();
     
     private UserMapper userMapper = null;
     
     private SubscriptionMapper subscriptionMapper = null;
     
     private SubscriptionGroupMapper subscriptionGroupMapper = null;
+    
+    private CancellationMapper cancellationMapper = null;
     
     
     public SubscriptionManagerImpl () throws IllegalArgumentException {
@@ -32,6 +38,7 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 	this.userMapper = UserMapper.userMapper();
 	this.subscriptionMapper = SubscriptionMapper.subscriptionMapper();
 	this.subscriptionGroupMapper = SubscriptionGroupMapper.subGroupMapper();
+	this.cancellationMapper = CancellationMapper.cancellationMapper();
     }
     
     
@@ -45,13 +52,13 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     }
 
     @Override
-    public Subscription createSubscription(String name, float price, String note, Date startMonth, Boolean cancellationRelevance,
+    public Subscription createSubscription(String name, float price, String note, java.util.Date startDate, Boolean cancellationRelevance,
 	    int userID) throws IllegalArgumentException {
 	Subscription sub = new Subscription();
 	sub.setName(name);
 	sub.setPrice(price);
 	sub.setNote(note);
-	sub.setStartMonth(startMonth);
+	sub.setStartDate(startDate);
 	sub.setCancellationRelevance(cancellationRelevance);
 	sub.setUserID(userID);
 	return this.subscriptionMapper.createSubscription(sub);
@@ -63,6 +70,15 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 	subgroup.setName(name);
 	subgroup.setUserID(userID);
 	return this.subscriptionGroupMapper.createSubscriptionGroup(subgroup);
+    }
+    
+    @Override
+    public Cancellation createCancellation(Date expirationDate, int cancellationPeriod, int subscriptionID) throws IllegalArgumentException {
+	Cancellation can = new Cancellation();
+	can.setExpirationDate(expirationDate);
+	can.setCancellationPeriod(cancellationPeriod);
+	can.setSubscriptionID(subscriptionID);
+	return this.cancellationMapper.createCancellation(can);
     }
 
     @Override

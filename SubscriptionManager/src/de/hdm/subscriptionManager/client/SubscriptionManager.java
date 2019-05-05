@@ -1,6 +1,6 @@
 package de.hdm.subscriptionManager.client;
 
-import de.hdm.subscriptionManager.client.gui.CreateSubscriptionForm;
+import de.hdm.subscriptionManager.client.gui.SubscriptionForm;
 import de.hdm.subscriptionManager.server.db.DBConnection;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdmin;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
@@ -41,7 +41,7 @@ public class SubscriptionManager implements EntryPoint {
      */
     public void onModuleLoad() {
 	LeftMenu lm = new LeftMenu();
-	CreateSubscriptionForm csf = new CreateSubscriptionForm();
+	SubscriptionForm csf = new SubscriptionForm();
 	
 
 //	final Button sendButton = new Button("Send");
