@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
+//import de.hdm.partnerboerse.shared.bo.Info;
+//import de.hdm.partnerboerse.shared.bo.Suchprofil;
 import de.hdm.subscriptionManager.server.db.CancellationMapper;
 import de.hdm.subscriptionManager.server.db.SubscriptionGroupMapper;
 import de.hdm.subscriptionManager.server.db.SubscriptionMapper;
@@ -104,18 +106,21 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 	
     }
 
+    /**
+	 * Aktualisiert eine bearbeitete SubscriptionGroup
+	 * @param suchprofil
+	 */
     @Override
     public void addSubscriptionToGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException {
-	// TODO Auto-generated method stub
-	
-    	
-    	
+
+    		this.subscriptionGroupMapper.updateSubscriptionGroup(sg);
+
     }
 
     @Override
     public void removeSubscriptionFromGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException {
 	// TODO Auto-generated method stub
-	
+
     }
 
     @Override
@@ -126,8 +131,8 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 
     @Override
     public ArrayList<SubscriptionGroup> getAllSubscriptionGroups(int userId) throws IllegalArgumentException {
-	// TODO Auto-generated method stub
-	return null;
+
+    	return this.subscriptionGroupMapper.findAll();
     }
 
     @Override
