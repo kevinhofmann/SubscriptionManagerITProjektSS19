@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 
 import com.google.appengine.api.utils.SystemProperty;
 
+
+
 /**
  * Verwalten eienr Verbindung zur Datenbank.
  * @author Mert; In Anlehnung an das Bankprojekt
@@ -49,7 +51,7 @@ public class DBConnection {
      * Software neu komilieren zu müssen.
      */
     private static String googleUrl = "jdbc:google:mysql://bankproject-154007:bankproject/bankproject?user=demo&password=demo";
-    private static String localUrl = "jdbc:mysql://127.0.0.1:3306/subscriptionmanager?user=root&password=\"";
+    private static String localUrl = "jdbc:mysql://127.0.0.1:3306/subscriptionmanager?user=root&password=";
 
     /**
      * Diese statische Methode kann aufgrufen werden durch

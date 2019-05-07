@@ -19,7 +19,7 @@ public class Subscription extends BusinessObject{
 
     private String note = "";
 
-    private Date startDate = null;
+    private java.util.Date startDate = null;
 
     private boolean cancellationRelevance = false;
     
@@ -49,12 +49,12 @@ public class Subscription extends BusinessObject{
 	this.note = note;
     }
 
-    public Date getStartMonth() {
+    public java.util.Date getStartDate() {
 	return startDate;
     }
 
-    public void setStartMonth(Date startMonth) {
-	this.startDate = startMonth;
+    public void setStartDate(java.util.Date startDate) {
+	this.startDate = startDate;
     }
 
     public boolean getCancellationRelevance() {

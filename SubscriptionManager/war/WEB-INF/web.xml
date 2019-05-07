@@ -11,6 +11,11 @@
     <servlet-class>de.hdm.subscriptionManager.server.SubscriptionManagerImpl</servlet-class>
   </servlet>
   
+    <servlet-mapping>
+    <servlet-name>subscriptionServlet</servlet-name>
+    <url-pattern>/subscriptionmanager/subscriptionmanagerservice</url-pattern>
+  </servlet-mapping>
+  
   
   <!-- Default page to serve -->
   <welcome-file-list>
