@@ -108,6 +108,8 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     public void addSubscriptionToGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException {
 	// TODO Auto-generated method stub
 	
+    	
+    	
     }
 
     @Override
@@ -118,8 +120,8 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 
     @Override
     public ArrayList<Subscription> getAllSubscriptions(int userId) throws IllegalArgumentException {
-	// TODO Auto-generated method stub
-	return null;
+	
+    	return this.subscriptionMapper.findAll();
     }
 
     @Override
