@@ -73,9 +73,10 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     }
     
     @Override
-    public Cancellation createCancellation(Date expirationDate, int cancellationPeriod, int subscriptionID) throws IllegalArgumentException {
+    public Cancellation createCancellation(Date expirationDate, Date cancellationDate, int cancellationPeriod, int subscriptionID) throws IllegalArgumentException {
 	Cancellation can = new Cancellation();
 	can.setExpirationDate(expirationDate);
+	can.setCancellationDate(cancellationDate);
 	can.setCancellationPeriod(cancellationPeriod);
 	can.setSubscriptionID(subscriptionID);
 	return this.cancellationMapper.createCancellation(can);
@@ -118,8 +119,7 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 
     @Override
     public ArrayList<Subscription> getAllSubscriptions(int userId) throws IllegalArgumentException {
-	// TODO Auto-generated method stub
-	return null;
+ 	return this.subscriptionMapper.getAllSubscriptions(userId);
     }
 
     @Override

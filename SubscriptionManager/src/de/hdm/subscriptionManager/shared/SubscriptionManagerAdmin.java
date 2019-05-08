@@ -29,7 +29,7 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	
 	public SubscriptionGroup createSubscriptionGroup(String name, int userID) throws IllegalArgumentException;
 
-	public Cancellation createCancellation(Date expirationDate, int cancellationPeriod, int subscriptionID) throws IllegalArgumentException;
+	public Cancellation createCancellation(Date expirationDate, Date cancellationDate, int cancellationPeriod, int subscriptionID) throws IllegalArgumentException;
 	
 	public void updateSubscription(Subscription s) throws IllegalArgumentException;
 	

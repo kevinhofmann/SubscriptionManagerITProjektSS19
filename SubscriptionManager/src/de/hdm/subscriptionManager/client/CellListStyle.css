@@ -1,0 +1,65 @@
+@charset "ISO-8859-1";
+
+.cellListEvenItem {
+
+    border-radius: 2px;
+    background: linear-gradient(to right, #E8E8E8 0%, #ffffff 95%);
+    margin: 5px 0px;
+    color: 	black;
+    font-size: 1.2em;
+    padding:4px 10px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.cellListOddItem {
+
+    border-radius: 2px;
+	background: linear-gradient(to right, #ffb080  0%, #ffffff 95%);
+    margin: 5px 0px;
+    padding: 3px;
+    color: 	black;
+    font-size: 1.2em;
+    padding: 4px 10px;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.cellListOddItem:hover {
+	transform: scale(1.02);
+	opacity: 1;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.cellListEvenItem:hover {
+	transform: scale(1.02);
+	opacity: 1;
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.cellListWidget {
+	display: inline-block;
+	height: 400px;
+	margin: 25px 25px 50px 5px;
+	overflow-y: scrollable;
+	padding-right: 7px;
+	width: 17em;
+}
+
+.cellListKeyboardSelectedItem {
+    
+}
+
+.cellListSelectedItem {
+	background: linear-gradient(to right, #ff6300 71%, #ffffff 100%);
+	transform: scale(1.02);
+	font-weight: bold;
+	font-size: 1.2em;
+	font-color: black;
+	height: auto;
+	overflow: visible;
+	border-radius: 5px black;
+	opacity: 1;
+}

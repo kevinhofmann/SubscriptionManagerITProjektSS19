@@ -1,6 +1,7 @@
 package de.hdm.subscriptionManager.server.db;
 
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -133,6 +134,43 @@ public class SubscriptionMapper {
 			e.printStackTrace();
 		}
 	}
-}
+    }
     
+    
+    public ArrayList<Subscription> getAllSubscriptions(int userId) {
+	
+	Connection con = DBConnection.connection();
+	
+	ArrayList<Subscription> subscriptionArrayList = new ArrayList<Subscription>();
+	
+	try {
+	    PreparedStatement stmt = con.prepareStatement("SELECT * FROM subscription WHERE userid= ?");
+	
+	    stmt.setInt(1, userId);
+	    
+	    ResultSet rs = stmt.executeQuery();
+	    
+	    /*
+	     * Für jeden Tupel eine neues Subscription Objekt erstellen und
+	     * in die ArrayList packen
+	     */
+	    while(rs.next()) {
+		Subscription sub = new Subscription();
+		
+		sub.setId(rs.getInt("subscriptionid"));
+		sub.setName(rs.getString("name"));
+		sub.setPrice(rs.getFloat("price"));
+		sub.setNote(rs.getString("note"));
+		sub.setStartDate(rs.getDate("startdate"));
+		sub.setCancellationRelevance(rs.getBoolean("cancellationrelevance"));
+		sub.setUserID(userId);
+		
+		subscriptionArrayList.add(sub);
+	    }
+	}
+	catch(SQLException e2) {
+		e2.printStackTrace();
+	}
+	return subscriptionArrayList;
+    }
 }

@@ -40,13 +40,14 @@ public class CancellationMapper {
 		id = cancellation.getId();
 		
 		PreparedStatement stmt1 = con.prepareStatement("INSERT INTO cancellation(cancellationid, ExpirationDate,"
-			+ "cancellationperiod, subscriptionid) VALUES(?,?,?,?)",
+			+ "cancellationdate, cancellationperiod, subscriptionid) VALUES(?,?,?,?,?)",
 			
 			Statement.RETURN_GENERATED_KEYS);
 		stmt1.setInt(1, cancellation.getId());
 		stmt1.setDate(2, cancellation.getExpirationDate());
-		stmt1.setInt(3, cancellation.getCancellationPeriod());
-		stmt1.setInt(4, cancellation.getSubscriptionID());
+		stmt1.setDate(3, cancellation.getCancellationDate());		
+		stmt1.setInt(4, cancellation.getCancellationPeriod());
+		stmt1.setInt(5, cancellation.getSubscriptionID());
 		
 		System.out.println(stmt);
 		stmt1.executeUpdate();

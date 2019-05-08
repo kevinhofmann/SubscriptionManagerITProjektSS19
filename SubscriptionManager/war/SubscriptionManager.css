@@ -46,7 +46,6 @@ body {
 	width: 20%;
 	height: 48em;
 	background-color: rgba(255, 255, 255, 0.8);
-	box-shadow: 3px 2px 2px grey;
 	display: inline-block;
 }
 
@@ -55,9 +54,10 @@ body {
 }
 
 #content {
-	width: 80%;
+	width: 70%;
 	height: 48em;
 	display: inline-block;
+	margin-left: 3em;
 }
 
 h1 {
@@ -88,6 +88,7 @@ h2 {
 	color: #333333;
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 600;
+	font-size: 1.1em;
 	text-align: center;
 	opacity: 0.8;
 	margin: 2px 2px;
@@ -114,6 +115,11 @@ h2 {
 }
 
 
+/** PANELS */
+
+.leftMenuScrollPanel {
+	height: 44em;
+}
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {

@@ -27,7 +27,7 @@ public interface SubscriptionManagerAdminAsync {
     void createSubscription(String name, float price, String note, java.util.Date startDate, Boolean cancellationRelevance, int userID,
 	    AsyncCallback<Subscription> callback);
 
-    void createCancellation(Date expirationDate, int cancellationPeriod, int subscriptionID, AsyncCallback<Cancellation> callback);
+    void createCancellation(Date expirationDate, Date cancellationDate, int cancellationPeriod, int subscriptionID, AsyncCallback<Cancellation> callback);
     
     void deleteSubscriptionGroup(SubscriptionGroup sg, AsyncCallback<Void> callback);
 

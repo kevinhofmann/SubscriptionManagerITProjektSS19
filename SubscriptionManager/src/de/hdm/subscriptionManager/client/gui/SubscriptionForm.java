@@ -13,6 +13,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
@@ -22,6 +23,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.ibm.icu.util.Calendar;
 
 import de.hdm.subscriptionManager.client.ClientsideSettings;
+import de.hdm.subscriptionManager.client.LeftMenu;
 import de.hdm.subscriptionManager.client.MainContentFrame;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
 import de.hdm.subscriptionManager.shared.bo.Cancellation;
@@ -47,9 +49,13 @@ public class SubscriptionForm extends MainContentFrame {
 
     private TextBox cancellationPeriod = new TextBox();
     private HorizontalPanel cancellationDatePicker = new HorizontalPanel();
+    private HorizontalPanel expirationDatePicker = new HorizontalPanel();
     private TextBox cancellationDay = new TextBox();
     private TextBox cancellationMonth = new TextBox();
     private TextBox cancellationYear = new TextBox();
+    private TextBox expirationDay = new TextBox();
+    private TextBox expirationMonth = new TextBox();
+    private TextBox expirationYear = new TextBox();
     private Button calculateCancellationDateButton = new Button("Berechnen");
 
     private HorizontalPanel formButtonPanel = new HorizontalPanel();
@@ -67,7 +73,7 @@ public class SubscriptionForm extends MainContentFrame {
     @Override
     protected void run() {
 
-	formTable.setWidget(0, 0, new Label("Ein neues Abo anlegen"));
+	formTable.setWidget(0, 0, new HTML("Ein neues Abo anlegen<br>"));
 
 	formTable.setWidget(1, 0, new Label("Aboname"));
 	formTable.setWidget(1, 1, name);
@@ -90,19 +96,30 @@ public class SubscriptionForm extends MainContentFrame {
 	formTable.setWidget(5, 0, new Label("Kuendigungsrelevant"));
 	formTable.setWidget(5, 1, cancellationRelevanceSelector);
 
-	formTable.setWidget(6, 0, new Label("Kuendigungsfrist (MM)"));
-	formTable.setWidget(6, 1, cancellationPeriod);
+	formTable.setWidget(6, 0, new Label("Auslaufdatum"));
+	expirationDatePicker.add(expirationDay);
+	expirationDatePicker.add(expirationMonth);
+	expirationDatePicker.add(expirationYear);
+	expirationDay.setWidth("20px");
+	expirationMonth.setWidth("20px");
+	expirationYear.setWidth("40px");
+	formTable.setWidget(6, 1, expirationDatePicker);
+
+	formTable.setWidget(7, 0, new Label("Kuendigungsfrist (MM)"));
+	formTable.setWidget(7, 1, cancellationPeriod);
 	cancellationPeriod.setWidth("20px");
 
-	formTable.setWidget(7, 0, new Label("Kuendigungstag"));
+	formTable.setWidget(8, 0, new Label("Kuendigungstag"));
 	cancellationDatePicker.add(cancellationDay);
 	cancellationDatePicker.add(cancellationMonth);
 	cancellationDatePicker.add(cancellationYear);
 	cancellationDay.setWidth("20px");
 	cancellationMonth.setWidth("20px");
 	cancellationYear.setWidth("40px");
-	formTable.setWidget(7, 1, cancellationDatePicker);
-	formTable.setWidget(7, 2, calculateCancellationDateButton);
+	formTable.setWidget(8, 1, cancellationDatePicker);
+	formTable.setWidget(8, 2, calculateCancellationDateButton);
+
+
 
 	cancellationRelevanceSelector.addItem("Ja");
 	cancellationRelevanceSelector.addItem("Nein");
@@ -116,20 +133,26 @@ public class SubscriptionForm extends MainContentFrame {
 		    cancellationYear.setEnabled(false);
 		    cancellationPeriod.setEnabled(false);
 		    calculateCancellationDateButton.setEnabled(false);
+		    expirationDay.setEnabled(false);
+		    expirationMonth.setEnabled(false);
+		    expirationYear.setEnabled(false);
 		} else {
 		    cancellationDay.setEnabled(true);
 		    cancellationMonth.setEnabled(true);
 		    cancellationYear.setEnabled(true);
 		    cancellationPeriod.setEnabled(true);
 		    calculateCancellationDateButton.setEnabled(true);
+		    expirationDay.setEnabled(true);
+		    expirationMonth.setEnabled(true);
+		    expirationYear.setEnabled(true);
 		}
 	    } 
 	});
-	
+
 
 	formButtonPanel.add(submit);
 	formButtonPanel.add(reset);
-	formTable.setWidget(8, 1, formButtonPanel);
+	formTable.setWidget(11, 1, formButtonPanel);
 
 	textBoxPanel.add(formTable);
 	calculateCancellationDateButton.addClickHandler(new calculateCancellationDateClickHandler());
@@ -139,30 +162,29 @@ public class SubscriptionForm extends MainContentFrame {
 
     }
 
+    
+    /*
+     * Klasse um den Kündigungstag anhand der Kündigungsfrist und des Auslaufdatums zu berechnen
+     */
     class calculateCancellationDateClickHandler implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
-	    int cancellationMonthCalc = Integer.parseInt(month.getText());
-	    int cancellationYearCalc = Integer.parseInt(year.getText());
+	    int cancellationMonthCalc = Integer.parseInt(expirationMonth.getText());
+	    int cancellationYearCalc = Integer.parseInt(expirationYear.getText());
 	    int cancellationPeriodCalc = Integer.parseInt(cancellationPeriod.getText());
 
 	    while(cancellationPeriodCalc > 0) {
-		if(cancellationMonthCalc < 12) {
-		    cancellationMonthCalc ++;
-		    cancellationPeriodCalc --;    
-		} if(cancellationMonthCalc == 12) {
-		    cancellationMonthCalc = 1;
-		    cancellationYearCalc ++;
-		    cancellationPeriodCalc --;   
+		--cancellationMonthCalc;
+		cancellationPeriodCalc--;
+		if(cancellationMonthCalc == 0) {
+		    cancellationMonthCalc = 12;
+		    cancellationYearCalc --;
 		}
 	    }
-	    
-	    cancellationDay.setText(day.getText());
+	    cancellationDay.setText(expirationDay.getText());
 	    cancellationMonth.setText(Integer.toString(cancellationMonthCalc));
 	    cancellationYear.setText(Integer.toString(cancellationYearCalc));
-
-
 	}
     }
 
@@ -177,7 +199,7 @@ public class SubscriptionForm extends MainContentFrame {
 	    if(cancellationRelevanceSelector.getSelectedItemText() == "Ja") {
 		cancellationRelevance = true;
 	    }
-	       subscriptionManagerAdmin.createSubscription(name.getText(), Float.parseFloat(price.getText()), note.getText(), startDateSql, cancellationRelevance, 1, new CreateSubscriptionCallback());
+	    subscriptionManagerAdmin.createSubscription(name.getText(), Float.parseFloat(price.getText()), note.getText(), startDateSql, cancellationRelevance, 1, new CreateSubscriptionCallback());
 	}
     }
 
@@ -193,27 +215,30 @@ public class SubscriptionForm extends MainContentFrame {
 	public void onSuccess(Subscription result) {
 	    int subscriptionID = result.getId();
 	    if(result.getCancellationRelevance() == true) {
-		    Date endDate = DateTimeFormat.getFormat("yyyy-MM-dd")
-			    .parse(Integer.parseInt(cancellationYear.getText()) + "-" + Integer.parseInt(cancellationMonth.getText()) + "-" + Integer.parseInt(day.getText()));
-		    java.sql.Date endDateSql = new java.sql.Date(endDate.getTime());
-		    
-		subscriptionManagerAdmin.createCancellation(endDateSql, Integer.parseInt(cancellationPeriod.getText()), subscriptionID, new CreateCancellationCallback());
+		Date cancellationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
+			.parse(Integer.parseInt(cancellationYear.getText()) + "-" + Integer.parseInt(cancellationMonth.getText()) + "-" + Integer.parseInt(day.getText()));
+		java.sql.Date cancellationDateSql = new java.sql.Date(cancellationDate.getTime());
+
+		Date expirationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
+			.parse(Integer.parseInt(expirationYear.getText()) + "-" + Integer.parseInt(expirationMonth.getText()) + "-" + Integer.parseInt(day.getText()));
+		java.sql.Date expirationDateSql = new java.sql.Date(expirationDate.getTime());
+
+		subscriptionManagerAdmin.createCancellation(cancellationDateSql, expirationDateSql, Integer.parseInt(cancellationPeriod.getText()), subscriptionID, new CreateCancellationCallback());
 	    }
 	}
     }
-    
+
     public class CreateCancellationCallback implements AsyncCallback<Cancellation> {
-	
+
 	@Override
 	public void onFailure(Throwable caught) {
-	    Window.alert("no");
+	    Window.alert("Error");
 	}
 
 	@Override
 	public void onSuccess(Cancellation result) {
-	    Window.alert("Kündigung Erfolg");
+	    LeftMenu leftMenu = new LeftMenu();
 	}
-	
     }
 
     class resetFormClickHandler implements ClickHandler {
@@ -226,8 +251,13 @@ public class SubscriptionForm extends MainContentFrame {
 	    day.setText("");
 	    month.setText("");
 	    year.setText("");
-
-
+	    cancellationDay.setText("");
+	    cancellationMonth.setText("");
+	    cancellationYear.setText("");
+	    expirationDay.setText("");
+	    expirationMonth.setText("");
+	    expirationYear.setText("");
+	    cancellationPeriod.setText("");
 	}
 
     }

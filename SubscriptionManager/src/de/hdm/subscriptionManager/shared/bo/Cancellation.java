@@ -11,24 +11,40 @@ public class Cancellation extends BusinessObject {
 
     private Date expirationDate = null;
     
+    private Date cancellationDate = null;
+    
     private int cancellationPeriod = 0;
 
     private int subscriptionID = 0;
 
     /**
-     * @return the dateOfNotice
+     * @return Auslaufdatum des Abos
      */
     public Date getExpirationDate() {
 	return expirationDate;
     }
 
     /**
-     * @param dateOfNotice the dateOfNotice to set
+     * @param Auslaufdatum des Abos
      */
     public void setExpirationDate(Date expirationDate) {
 	this.expirationDate = expirationDate;
     }
     
+    /**
+     * @return des Kündigungsdatums (Tag an dem gekündigt sein muss)
+     */
+    public Date getCancellationDate() {
+	return cancellationDate;
+    }
+
+    /**
+     * @param Setzen des Kündigungsdatums (Tag an dem gekündigt sein muss)
+     */
+    public void setCancellationDate(Date cancellationDate) {
+	this.cancellationDate = cancellationDate;
+    }
+
     /**
      * @return the cancellationPeriod
      */
@@ -50,5 +66,6 @@ public class Cancellation extends BusinessObject {
     public void setSubscriptionID(int subscriptionID) {
 	this.subscriptionID = subscriptionID;
     }
+
 
 }
