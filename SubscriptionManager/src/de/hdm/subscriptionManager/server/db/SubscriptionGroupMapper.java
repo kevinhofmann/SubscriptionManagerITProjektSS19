@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
@@ -104,7 +105,7 @@ public class SubscriptionGroupMapper {
     
     
     /*
-     * Methode zum Löschen einer SubscriptionGroup
+     * Methode zum Lï¿½schen einer SubscriptionGroup
      */
     public void deleteSubscriptionGroup(SubscriptionGroup subscriptionGroup) {
 	
@@ -129,4 +130,35 @@ public class SubscriptionGroupMapper {
 		}
 	}
 }
+    
+    
+    /*
+     * Methode zum Anzeigen aller Subscription Groups. 
+     */
+    public ArrayList<SubscriptionGroup> findAll() {
+		ArrayList<SubscriptionGroup> result = new ArrayList<>();
+
+		Connection con = DBConnection.connection();
+		try {
+
+			Statement stmt = con.createStatement();
+
+			ResultSet rs = stmt.executeQuery("SELECT * FROM info ORDER BY id");
+
+			while (rs.next()) {
+				SubscriptionGroup sg = new SubscriptionGroup();
+
+				sg.setId(rs.getInt("id"));
+				sg.setName(rs.getString("Name"));
+				sg.setUserID(rs.getInt("userId"));
+
+				result.add(sg);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+
+	}
 }

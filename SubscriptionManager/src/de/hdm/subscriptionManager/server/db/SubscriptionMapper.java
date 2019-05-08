@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.Date;
 
+//import de.hdm.partnerboerse.server.db.DBConnection;
+//import de.hdm.partnerboerse.shared.bo.Info;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 
@@ -110,7 +112,7 @@ public class SubscriptionMapper {
     
     
     /*
-     * Methode zum Löschen einer Subscription
+     * Methode zum Lï¿½schen einer Subscription
      */
     public void deleteSubscription(Subscription subscription) {
 	
@@ -137,6 +139,7 @@ public class SubscriptionMapper {
     }
     
     
+
     public ArrayList<Subscription> getAllSubscriptions(int userId) {
 	
 	Connection con = DBConnection.connection();
@@ -173,4 +176,40 @@ public class SubscriptionMapper {
 	}
 	return subscriptionArrayList;
     }
+
+
+    /*
+     * Methode zum Anzeigen aller Subscription. 
+     */
+    public ArrayList<Subscription> findAll() {
+		ArrayList<Subscription> result = new ArrayList<>();
+
+		Connection con = DBConnection.connection();
+		try {
+
+			Statement stmt = con.createStatement();
+
+			ResultSet rs = stmt.executeQuery("SELECT * FROM info ORDER BY id");
+
+			while (rs.next()) {
+				Subscription s = new Subscription();
+
+				s.setId(rs.getInt("id"));
+				s.setPrice(rs.getInt("price"));
+				s.setNote(rs.getString("note"));
+				s.setStartDate(rs.getDate("startDate"));
+				s.setCancellationRelevance(rs.getBoolean("cancellationRelevance"));
+				s.setUserID(rs.getInt("userId"));
+
+				result.add(s);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+
+	}
+    
+    
 }
