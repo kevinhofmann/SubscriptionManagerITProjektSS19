@@ -83,6 +83,11 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 	can.setSubscriptionID(subscriptionID);
 	return this.cancellationMapper.createCancellation(can);
     }
+    
+    @Override
+    public Cancellation getCancellationBySubscriptionId(int subscriptionID) throws IllegalArgumentException {
+	return this.cancellationMapper.getCancellationBySubscriptionId(subscriptionID);
+    }
 
     @Override
     public void updateSubscription(Subscription s) throws IllegalArgumentException {

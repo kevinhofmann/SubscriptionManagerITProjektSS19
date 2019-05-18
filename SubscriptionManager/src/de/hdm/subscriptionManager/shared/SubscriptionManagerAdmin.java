@@ -16,7 +16,7 @@ import de.hdm.subscriptionManager.shared.bo.User;
 public interface SubscriptionManagerAdmin extends RemoteService {
     
 	/**
-	 * Initialisierung des Objekts. Diese ist hauptsächlich
+	 * Initialisierung des Objekts. Diese ist hauptsï¿½chlich
 	 * zum No Argument Constructor der implementierenden Klasse notwendig.
 	 * 
 	 * @throws IllegalArgumentException
@@ -30,6 +30,8 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	public SubscriptionGroup createSubscriptionGroup(String name, int userID) throws IllegalArgumentException;
 
 	public Cancellation createCancellation(Date expirationDate, Date cancellationDate, int cancellationPeriod, int subscriptionID) throws IllegalArgumentException;
+	
+	public Cancellation getCancellationBySubscriptionId(int subscriptionID) throws IllegalArgumentException;
 	
 	public void updateSubscription(Subscription s) throws IllegalArgumentException;
 	

@@ -143,16 +143,16 @@ public class SubscriptionGroupMapper {
 
 			Statement stmt = con.createStatement();
 
-			ResultSet rs = stmt.executeQuery("SELECT * FROM info ORDER BY id");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM subscriptiongroup ORDER BY groupid");
 
 			while (rs.next()) {
-				SubscriptionGroup sg = new SubscriptionGroup();
+				SubscriptionGroup subgroup = new SubscriptionGroup();
 
-				sg.setId(rs.getInt("id"));
-				sg.setName(rs.getString("Name"));
-				sg.setUserID(rs.getInt("userId"));
+				subgroup.setId(rs.getInt("groupid"));
+				subgroup.setName(rs.getString("Name"));
+				subgroup.setUserID(rs.getInt("userId"));
 
-				result.add(sg);
+				result.add(subgroup);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

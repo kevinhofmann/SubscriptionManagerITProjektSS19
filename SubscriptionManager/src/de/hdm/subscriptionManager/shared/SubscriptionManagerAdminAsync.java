@@ -26,6 +26,8 @@ public interface SubscriptionManagerAdminAsync {
 
     void createSubscription(String name, float price, String note, java.util.Date startDate, Boolean cancellationRelevance, int userID,
 	    AsyncCallback<Subscription> callback);
+    
+    void getCancellationBySubscriptionId(int subscriptionID, AsyncCallback<Cancellation> callback) throws IllegalArgumentException;
 
     void createCancellation(Date expirationDate, Date cancellationDate, int cancellationPeriod, int subscriptionID, AsyncCallback<Cancellation> callback);
     

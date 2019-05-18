@@ -20,22 +20,21 @@ import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.ibm.icu.util.Calendar;
 
 import de.hdm.subscriptionManager.client.ClientsideSettings;
 import de.hdm.subscriptionManager.client.LeftMenu;
-import de.hdm.subscriptionManager.client.MainContentFrame;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
 import de.hdm.subscriptionManager.shared.bo.Cancellation;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.User;
 
-public class SubscriptionForm extends MainContentFrame {
+public class SubscriptionForm extends VerticalPanel {
 
 
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
 
     private Subscription subscription = null;
+    private Subscription selectedSubscription = null;
     private TextBox name = new TextBox();
     private TextBox price = new TextBox();
     private TextBox note = new TextBox();
@@ -65,23 +64,40 @@ public class SubscriptionForm extends MainContentFrame {
     private Boolean cancellationRelevance = false;
     private VerticalPanel textBoxPanel = new VerticalPanel();
 
+    private HTML headline= new HTML("Ein neues Abo anlegen<br>");
+    private Label nameLabel = new Label("Aboname");
+    private Label priceLabel = new Label("Monatspreis");
+    private Label noteLabel = new Label("Anmerkung");
+    private Label startDateLabel = new Label("Startdatum");
+    private Label expirationDateLabel = new Label("Auslaufdatum");
+    private Label cancellationRelevanceLabel = new Label("Kuendigungsrelevant");
+    private Label cancellationPeriodLabel = new Label("Kuendigungsfrist (MM)");
+    private Label cancellationDateLabel = new Label("Kuendigungstag");
 
+    
     public SubscriptionForm() {
-	super.onLoad();
+	
+    }
+    
+    public SubscriptionForm(Subscription subscription) {
+	this.selectedSubscription = subscription;
+	name.setText(subscription.getName());
+	price.setText(Float.toString(subscription.getPrice()));
     }
 
-    @Override
-    protected void run() {
+    protected void onLoad() {
 
-	formTable.setWidget(0, 0, new HTML("Ein neues Abo anlegen<br>"));
+	super.onLoad();
+	
+	formTable.setWidget(0, 0, headline);
 
-	formTable.setWidget(1, 0, new Label("Aboname"));
+	formTable.setWidget(1, 0, nameLabel);
 	formTable.setWidget(1, 1, name);
 
-	formTable.setWidget(2, 0, new Label("Monatspreis"));
+	formTable.setWidget(2, 0, priceLabel);
 	formTable.setWidget(2, 1, price);
 
-	formTable.setWidget(3, 0, new Label("Anmerkung"));
+	formTable.setWidget(3, 0, noteLabel);
 	formTable.setWidget(3, 1, note);
 
 	datePicker.add(day);
@@ -90,13 +106,13 @@ public class SubscriptionForm extends MainContentFrame {
 	day.setWidth("20px");
 	month.setWidth("20px");
 	year.setWidth("40px");
-	formTable.setWidget(4, 0, new Label("Startdatum"));
+	formTable.setWidget(4, 0, startDateLabel);
 	formTable.setWidget(4, 1, datePicker);
 
-	formTable.setWidget(5, 0, new Label("Kuendigungsrelevant"));
+	formTable.setWidget(5, 0, cancellationRelevanceLabel);
 	formTable.setWidget(5, 1, cancellationRelevanceSelector);
 
-	formTable.setWidget(6, 0, new Label("Auslaufdatum"));
+	formTable.setWidget(6, 0, expirationDateLabel);
 	expirationDatePicker.add(expirationDay);
 	expirationDatePicker.add(expirationMonth);
 	expirationDatePicker.add(expirationYear);
@@ -105,11 +121,11 @@ public class SubscriptionForm extends MainContentFrame {
 	expirationYear.setWidth("40px");
 	formTable.setWidget(6, 1, expirationDatePicker);
 
-	formTable.setWidget(7, 0, new Label("Kuendigungsfrist (MM)"));
+	formTable.setWidget(7, 0, cancellationPeriodLabel);
 	formTable.setWidget(7, 1, cancellationPeriod);
 	cancellationPeriod.setWidth("20px");
 
-	formTable.setWidget(8, 0, new Label("Kuendigungstag"));
+	formTable.setWidget(8, 0, cancellationDateLabel);
 	cancellationDatePicker.add(cancellationDay);
 	cancellationDatePicker.add(cancellationMonth);
 	cancellationDatePicker.add(cancellationYear);
@@ -164,7 +180,7 @@ public class SubscriptionForm extends MainContentFrame {
 
     
     /*
-     * Klasse um den Kündigungstag anhand der Kündigungsfrist und des Auslaufdatums zu berechnen
+     * Klasse um den Kï¿½ndigungstag anhand der Kï¿½ndigungsfrist und des Auslaufdatums zu berechnen
      */
     class calculateCancellationDateClickHandler implements ClickHandler {
 

@@ -4,6 +4,7 @@ import de.hdm.subscriptionManager.client.gui.SubscriptionForm;
 import de.hdm.subscriptionManager.server.db.DBConnection;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdmin;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
+import de.hdm.subscriptionManager.shared.bo.Subscription;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -33,6 +34,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 @SuppressWarnings("deprecation")
 public class SubscriptionManager implements EntryPoint {
 
+    
+    private Label headline = new Label("Willkommen beim Subscription Manager");
+    private VerticalPanel containerPanel = new VerticalPanel();
+    private Subscription subscription = new Subscription();
 
    private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
 
@@ -40,117 +45,16 @@ public class SubscriptionManager implements EntryPoint {
      * This is the entry point method.
      */
     public void onModuleLoad() {
-	LeftMenu lm = new LeftMenu();
-	SubscriptionForm csf = new SubscriptionForm();
 	
+	containerPanel.add(headline);
+	LeftMenu lm = new LeftMenu();
+	Menubar menuBar = new Menubar(subscription);
+	
+	RootPanel.get("content").clear();
+	RootPanel.get("content").add(containerPanel);
 
-//	final Button sendButton = new Button("Send");
-//	final TextBox nameField = new TextBox();
-//	nameField.setText("GWT User");
-//	final Label errorLabel = new Label();
-//
-//	// We can add style names to widgets
-//	sendButton.addStyleName("sendButton");
-//
-//	// Add the nameField and sendButton to the RootPanel
-//	// Use RootPanel.get() to get the entire body element
-//	RootPanel.get("header").add(nameField);
-//	RootPanel.get("main").add(sendButton);
-//	RootPanel.get("main").add(errorLabel);
-//
-//	// Focus the cursor on the name field when the app loads
-//	nameField.setFocus(true);
-//	nameField.selectAll();
-//
-//	// Create the popup dialog box
-//	final DialogBox dialogBox = new DialogBox();
-//	dialogBox.setText("Remote Procedure Call");
-//	dialogBox.setAnimationEnabled(true);
-//	final Button closeButton = new Button("Close");
-//	// We can set the id of a widget by accessing its Element
-//	closeButton.getElement().setId("closeButton");
-//	final Label textToServerLabel = new Label();
-//	final HTML serverResponseLabel = new HTML();
-//	VerticalPanel dialogVPanel = new VerticalPanel();
-//	dialogVPanel.addStyleName("dialogVPanel");
-//	dialogVPanel.add(new HTML("<b>Sending name to the server:</b>"));
-//	dialogVPanel.add(textToServerLabel);
-//	dialogVPanel.add(new HTML("<br><b>Server replies:</b>"));
-//	dialogVPanel.add(serverResponseLabel);
-//	dialogVPanel.setHorizontalAlignment(VerticalPanel.ALIGN_RIGHT);
-//	dialogVPanel.add(closeButton);
-//	dialogBox.setWidget(dialogVPanel);
-//
-//	// Add a handler to close the DialogBox
-//	closeButton.addClickHandler(new ClickHandler() {
-//	    public void onClick(ClickEvent event) {
-//		dialogBox.hide();
-//		sendButton.setEnabled(true);
-//		sendButton.setFocus(true);
-//	    }
-//	});
-//    }
-//}
 
-//	// Create a handler for the sendButton and nameField
-//	class MyHandler implements ClickHandler, KeyUpHandler {
-//	    /**
-//	     * Fired when the user clicks on the sendButton.
-//	     */
-//	    public void onClick(ClickEvent event) {
-//		sendNameToServer();
-//	    }
-//
-//	    /**
-//	     * Fired when the user types in the nameField.
-//	     */
-//	    public void onKeyUp(KeyUpEvent event) {
-//		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-//		    sendNameToServer();
-//		}
-//	    }
 
-	    /**
-	     * Send the name from the nameField to the server and wait for a response.
-	     */
-//	    private void sendNameToServer() {
-//		// First, we validate the input.
-//		errorLabel.setText("");
-//		String textToServer = nameField.getText();
-//		if (!FieldVerifier.isValidName(textToServer)) {
-//		    errorLabel.setText("Please enter at least four characters");
-//		    return;
-//		}
-//
-//		// Then, we send the input to the server.
-//		sendButton.setEnabled(false);
-//		textToServerLabel.setText(textToServer);
-//		serverResponseLabel.setText("");
-//		greetingService.greetServer(textToServer, new AsyncCallback<String>() {
-//		    public void onFailure(Throwable caught) {
-//			// Show the RPC error message to the user
-//			dialogBox.setText("Remote Procedure Call - Failure");
-//			serverResponseLabel.addStyleName("serverResponseLabelError");
-//			serverResponseLabel.setHTML(SERVER_ERROR);
-//			dialogBox.center();
-//			closeButton.setFocus(true);
-//		    }
-//
-//		    public void onSuccess(String result) {
-//			dialogBox.setText("Remote Procedure Call");
-//			serverResponseLabel.removeStyleName("serverResponseLabelError");
-//			serverResponseLabel.setHTML(result);
-//			dialogBox.center();
-//			closeButton.setFocus(true);
-//		    }
-//		});
-//	    }
-//	}
-//
-//	// Add a handler to send the name to the server
-//	MyHandler handler = new MyHandler();
-//	sendButton.addClickHandler(handler);
-//	nameField.addKeyUpHandler(handler);
     }
 }
 

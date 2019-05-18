@@ -5,9 +5,11 @@ import java.sql.Date;
 public class Cancellation extends BusinessObject {
 
     /**
-     * Dient zum Serialisieren von Objekten für eine RPC fähigen Austausch zwischen Server und Client.
+     * Dient zum Serialisieren von Objekten fï¿½r eine RPC fï¿½higen Austausch zwischen Server und Client.
      */
     private static final long serialVersionUID = 1L;
+    
+    private int cancellationID = 0;
 
     private Date expirationDate = null;
     
@@ -32,14 +34,14 @@ public class Cancellation extends BusinessObject {
     }
     
     /**
-     * @return des Kündigungsdatums (Tag an dem gekündigt sein muss)
+     * @return des Kï¿½ndigungsdatums (Tag an dem gekï¿½ndigt sein muss)
      */
     public Date getCancellationDate() {
 	return cancellationDate;
     }
 
     /**
-     * @param Setzen des Kündigungsdatums (Tag an dem gekündigt sein muss)
+     * @param Setzen des Kï¿½ndigungsdatums (Tag an dem gekï¿½ndigt sein muss)
      */
     public void setCancellationDate(Date cancellationDate) {
 	this.cancellationDate = cancellationDate;
@@ -65,6 +67,20 @@ public class Cancellation extends BusinessObject {
 
     public void setSubscriptionID(int subscriptionID) {
 	this.subscriptionID = subscriptionID;
+    }
+
+    /**
+     * @return the cancellationID
+     */
+    public int getCancellationID() {
+	return cancellationID;
+    }
+
+    /**
+     * @param cancellationID the cancellationID to set
+     */
+    public void setCancellationID(int cancellationID) {
+	this.cancellationID = cancellationID;
     }
 
 
