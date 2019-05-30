@@ -4,15 +4,28 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
+import de.hdm.subscriptionManager.client.gui.AddSubscriptionToGroupDialogBox;
+import de.hdm.subscriptionManager.client.gui.CreateSubscription;
+import de.hdm.subscriptionManager.client.gui.CreateSubscriptionGroupDialogBox;
+import de.hdm.subscriptionManager.client.gui.DeleteSubscriptionDialogBox;
+import de.hdm.subscriptionManager.client.gui.DeleteSubscriptionGroupDialogBox;
+import de.hdm.subscriptionManager.client.gui.EditSubscriptionGroupDialogBox;
+import de.hdm.subscriptionManager.client.gui.RemoveSubscriptionFromGroupDialogBox;
 import de.hdm.subscriptionManager.client.gui.SubscriptionForm;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
+import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 
 public class MenuBarCommand {
     
     private static Subscription subscription = new Subscription();
+    private static SubscriptionGroup subGroup = new SubscriptionGroup();
 
     public MenuBarCommand(Subscription sub) {
-	subscription = sub;
+	this.subscription = sub;
+    }
+    
+    public MenuBarCommand(SubscriptionGroup subGroup) {
+	this.subGroup = subGroup;
     }
     
     public static class CreateSubscriptionCommand implements Command {
@@ -29,8 +42,8 @@ public class MenuBarCommand {
 
 	@Override
 	public void execute() {
-	    Window.alert("Gruppe");
-	    
+	    CreateSubscriptionGroupDialogBox createGroup = new CreateSubscriptionGroupDialogBox();
+	    createGroup.center();
 	}
     }
     
@@ -48,7 +61,8 @@ public class MenuBarCommand {
 
 	@Override
 	public void execute() {
-	    // TODO Auto-generated method stub
+	    EditSubscriptionGroupDialogBox editGroup = new EditSubscriptionGroupDialogBox();
+	    editGroup.center();
 	    
 	}
     }
@@ -57,8 +71,8 @@ public class MenuBarCommand {
 
 	@Override
 	public void execute() {
-	    // TODO Auto-generated method stub
-	    
+	    DeleteSubscriptionDialogBox deleteSubscription = new DeleteSubscriptionDialogBox();
+	    deleteSubscription.center();   
 	}
     }
     
@@ -66,7 +80,8 @@ public class MenuBarCommand {
 
 	@Override
 	public void execute() {
-	    // TODO Auto-generated method stub
+	    DeleteSubscriptionGroupDialogBox deleteGroup = new DeleteSubscriptionGroupDialogBox();
+	    deleteGroup.center();
 	    
 	}
     }
@@ -75,16 +90,17 @@ public class MenuBarCommand {
 
 	@Override
 	public void execute() {
-	    // TODO Auto-generated method stub
-	    
+	    AddSubscriptionToGroupDialogBox addSubscriptionToGroup = new AddSubscriptionToGroupDialogBox();
+	    addSubscriptionToGroup.center();
 	}
     }
     
-    public static class RemoveSubscriptionToGroupCommand implements Command {
+    public static class RemoveSubscriptionFromGroupCommand implements Command {
 
 	@Override
 	public void execute() {
-	    // TODO Auto-generated method stub
+	    RemoveSubscriptionFromGroupDialogBox removeSubscriptionFromGroup = new RemoveSubscriptionFromGroupDialogBox();
+	    removeSubscriptionFromGroup.center();
 	    
 	}
     }

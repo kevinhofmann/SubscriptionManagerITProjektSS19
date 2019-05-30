@@ -35,6 +35,7 @@ public class SubscriptionForm extends VerticalPanel {
 
     private Subscription subscription = null;
     private Subscription selectedSubscription = null;
+    private Cancellation cancellationInfo = null;
     private TextBox name = new TextBox();
     private TextBox price = new TextBox();
     private TextBox note = new TextBox();
@@ -74,31 +75,54 @@ public class SubscriptionForm extends VerticalPanel {
     private Label cancellationPeriodLabel = new Label("Kuendigungsfrist (MM)");
     private Label cancellationDateLabel = new Label("Kuendigungstag");
 
-    
+
+
     public SubscriptionForm() {
-	
+	cancellationRelevanceSelector.addItem("Ja");
+	cancellationRelevanceSelector.addItem("Nein");
+	submit.addClickHandler(new submitFormClickHandler());
     }
-    
+
     public SubscriptionForm(Subscription subscription) {
+	cancellationRelevanceSelector.addItem("Ja");
+	cancellationRelevanceSelector.addItem("Nein");
+	submit.addClickHandler(new updateFormClickHandler());
+	submit.setText("Update");
 	this.selectedSubscription = subscription;
-	name.setText(subscription.getName());
-	price.setText(Float.toString(subscription.getPrice()));
+	name.setText(selectedSubscription.getName());
+	price.setText(Float.toString(selectedSubscription.getPrice()));
+	note.setText(selectedSubscription.getNote());
+	String extractedDay = DateTimeFormat.getFormat("dd-MM-yyyy").format(selectedSubscription.getStartDate()).split("-")[0];
+	String extractedMonth = DateTimeFormat.getFormat("dd-MM-yyyy").format(selectedSubscription.getStartDate()).split("-")[1];
+	String extractedYear = DateTimeFormat.getFormat("dd-MM-yyyy").format(selectedSubscription.getStartDate()).split("-")[2];
+	day.setText(extractedDay);
+	month.setText(extractedMonth);
+	year.setText(extractedYear);
+	subscriptionManagerAdmin.getCancellationBySubscriptionId(selectedSubscription.getId(), new GetCancellationInfoCallback());
+	if(selectedSubscription.getCancellationRelevance() == true) {
+	    cancellationRelevanceSelector.setItemSelected(0, true);
+	} else {
+	    cancellationRelevanceSelector.setItemSelected(1, true);
+	    cancellationDay.setEnabled(false);
+	    cancellationMonth.setEnabled(false);
+	    cancellationYear.setEnabled(false);
+	    cancellationPeriod.setEnabled(false);
+	    calculateCancellationDateButton.setEnabled(false);
+	    expirationDay.setEnabled(false);
+	    expirationMonth.setEnabled(false);
+	    expirationYear.setEnabled(false);
+	}
     }
 
-    protected void onLoad() {
+    public FlexTable constructTable() {
 
-	super.onLoad();
-	
 	formTable.setWidget(0, 0, headline);
 
 	formTable.setWidget(1, 0, nameLabel);
-	formTable.setWidget(1, 1, name);
 
 	formTable.setWidget(2, 0, priceLabel);
-	formTable.setWidget(2, 1, price);
 
 	formTable.setWidget(3, 0, noteLabel);
-	formTable.setWidget(3, 1, note);
 
 	datePicker.add(day);
 	datePicker.add(month);
@@ -107,7 +131,6 @@ public class SubscriptionForm extends VerticalPanel {
 	month.setWidth("20px");
 	year.setWidth("40px");
 	formTable.setWidget(4, 0, startDateLabel);
-	formTable.setWidget(4, 1, datePicker);
 
 	formTable.setWidget(5, 0, cancellationRelevanceLabel);
 	formTable.setWidget(5, 1, cancellationRelevanceSelector);
@@ -119,11 +142,8 @@ public class SubscriptionForm extends VerticalPanel {
 	expirationDay.setWidth("20px");
 	expirationMonth.setWidth("20px");
 	expirationYear.setWidth("40px");
-	formTable.setWidget(6, 1, expirationDatePicker);
 
 	formTable.setWidget(7, 0, cancellationPeriodLabel);
-	formTable.setWidget(7, 1, cancellationPeriod);
-	cancellationPeriod.setWidth("20px");
 
 	formTable.setWidget(8, 0, cancellationDateLabel);
 	cancellationDatePicker.add(cancellationDay);
@@ -132,13 +152,10 @@ public class SubscriptionForm extends VerticalPanel {
 	cancellationDay.setWidth("20px");
 	cancellationMonth.setWidth("20px");
 	cancellationYear.setWidth("40px");
-	formTable.setWidget(8, 1, cancellationDatePicker);
+
 	formTable.setWidget(8, 2, calculateCancellationDateButton);
 
 
-
-	cancellationRelevanceSelector.addItem("Ja");
-	cancellationRelevanceSelector.addItem("Nein");
 	cancellationRelevanceSelector.addChangeHandler(new ChangeHandler() {
 
 	    @Override
@@ -165,20 +182,43 @@ public class SubscriptionForm extends VerticalPanel {
 	    } 
 	});
 
-
 	formButtonPanel.add(submit);
 	formButtonPanel.add(reset);
 	formTable.setWidget(11, 1, formButtonPanel);
-
 	textBoxPanel.add(formTable);
+
+	return formTable;
+    }
+
+
+
+    protected void onLoad() {
+	constructTable();
+
+	formTable.setWidget(1, 1, name);
+
+	formTable.setWidget(2, 1, price);
+
+	formTable.setWidget(3, 1, note);
+
+	formTable.setWidget(4, 1, datePicker);
+
+	formTable.setWidget(6, 1, expirationDatePicker);
+
+	formTable.setWidget(7, 1, cancellationPeriod);
+	cancellationPeriod.setWidth("20px");
+
+	formTable.setWidget(8, 1, cancellationDatePicker);
+	formTable.setWidget(8, 2, calculateCancellationDateButton);
+
 	calculateCancellationDateButton.addClickHandler(new calculateCancellationDateClickHandler());
-	submit.addClickHandler(new submitFormClickHandler());
+
 	reset.addClickHandler(new resetFormClickHandler());
 	RootPanel.get("content").add(textBoxPanel);
 
     }
 
-    
+
     /*
      * Klasse um den K�ndigungstag anhand der K�ndigungsfrist und des Auslaufdatums zu berechnen
      */
@@ -229,6 +269,7 @@ public class SubscriptionForm extends VerticalPanel {
 
 	@Override
 	public void onSuccess(Subscription result) {
+	    selectedSubscription = result;
 	    int subscriptionID = result.getId();
 	    if(result.getCancellationRelevance() == true) {
 		Date cancellationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
@@ -239,7 +280,12 @@ public class SubscriptionForm extends VerticalPanel {
 			.parse(Integer.parseInt(expirationYear.getText()) + "-" + Integer.parseInt(expirationMonth.getText()) + "-" + Integer.parseInt(day.getText()));
 		java.sql.Date expirationDateSql = new java.sql.Date(expirationDate.getTime());
 
-		subscriptionManagerAdmin.createCancellation(cancellationDateSql, expirationDateSql, Integer.parseInt(cancellationPeriod.getText()), subscriptionID, new CreateCancellationCallback());
+		subscriptionManagerAdmin.createCancellation(expirationDateSql, cancellationDateSql, Integer.parseInt(cancellationPeriod.getText()), subscriptionID, new CreateCancellationCallback());
+	    } else {
+		LeftMenu lm = new LeftMenu();
+		SubscriptionView sv = new SubscriptionView(result);
+		RootPanel.get("content").clear();
+		RootPanel.get("content").add(sv);
 	    }
 	}
     }
@@ -248,12 +294,48 @@ public class SubscriptionForm extends VerticalPanel {
 
 	@Override
 	public void onFailure(Throwable caught) {
+	    // TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onSuccess(Cancellation result) {
+	    LeftMenu lm = new LeftMenu();
+	    SubscriptionView sv = new SubscriptionView(selectedSubscription);
+	    RootPanel.get("content").clear();
+	    RootPanel.get("content").add(sv);
+
+	}
+
+    }
+
+    public class GetCancellationInfoCallback implements AsyncCallback<Cancellation> {
+
+	@Override
+	public void onFailure(Throwable caught) {
 	    Window.alert("Error");
 	}
 
 	@Override
 	public void onSuccess(Cancellation result) {
-	    LeftMenu leftMenu = new LeftMenu();
+	    cancellationInfo = new Cancellation();
+	    cancellationInfo = result;
+	    String extractedExpirationDay = DateTimeFormat.getFormat("dd-MM-yyyy").format(cancellationInfo.getExpirationDate()).split("-")[0];
+	    String extractedExpirationMonth = DateTimeFormat.getFormat("dd-MM-yyyy").format(cancellationInfo.getExpirationDate()).split("-")[1];
+	    String extractedExpirationYear = DateTimeFormat.getFormat("dd-MM-yyyy").format(cancellationInfo.getExpirationDate()).split("-")[2];
+	    expirationDay.setText(extractedExpirationDay);
+	    expirationMonth.setText(extractedExpirationMonth);
+	    expirationYear.setText(extractedExpirationYear);
+
+	    String extractedCancellationDay = DateTimeFormat.getFormat("dd-MM-yyyy").format(cancellationInfo.getCancellationDate()).split("-")[0];
+	    String extractedCancellationMonth = DateTimeFormat.getFormat("dd-MM-yyyy").format(cancellationInfo.getCancellationDate()).split("-")[1];
+	    String extractedCancellationYear = DateTimeFormat.getFormat("dd-MM-yyyy").format(cancellationInfo.getCancellationDate()).split("-")[2];
+	    cancellationDay.setText(extractedCancellationDay);
+	    cancellationMonth.setText(extractedCancellationMonth);
+	    cancellationYear.setText(extractedCancellationYear);
+
+	    cancellationPeriod.setText(Integer.toString(cancellationInfo.getCancellationPeriod()));
+
 	}
     }
 
@@ -275,7 +357,94 @@ public class SubscriptionForm extends VerticalPanel {
 	    expirationYear.setText("");
 	    cancellationPeriod.setText("");
 	}
+    }
+
+    class updateFormClickHandler implements ClickHandler {
+
+	@Override
+	public void onClick(ClickEvent event) {
+
+	    Date startDate = DateTimeFormat.getFormat("yyyy-MM-dd")
+		    .parse(Integer.parseInt(year.getText()) + "-" + Integer.parseInt(month.getText()) + "-" + Integer.parseInt(day.getText()));
+	    java.sql.Date startDateSql = new java.sql.Date(startDate.getTime());
+
+	    if(cancellationRelevanceSelector.getSelectedItemText() == "Ja") {
+		cancellationRelevance = true;
+	    }
+
+	    selectedSubscription.setName(name.getText());
+	    selectedSubscription.setPrice(Float.parseFloat(price.getText()));
+	    selectedSubscription.setNote(note.getText());
+	    selectedSubscription.setStartDate(startDateSql);
+	    selectedSubscription.setCancellationRelevance(cancellationRelevance);
+
+	    subscriptionManagerAdmin.updateSubscription(selectedSubscription, new UpdateSubscriptionCallback());
+	}
+    }
+
+
+    class UpdateSubscriptionCallback implements AsyncCallback<Void> {
+
+	@Override
+	public void onFailure(Throwable caught) {
+	    // TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onSuccess(Void result) {
+
+		Date cancellationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
+			.parse(Integer.parseInt(cancellationYear.getText()) + "-" + Integer.parseInt(cancellationMonth.getText()) + "-" + Integer.parseInt(cancellationDay.getText()));
+		java.sql.Date cancellationDateSql = new java.sql.Date(cancellationDate.getTime());
+
+		Date expirationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
+			.parse(Integer.parseInt(expirationYear.getText()) + "-" + Integer.parseInt(expirationMonth.getText()) + "-" + Integer.parseInt(expirationDay.getText()));
+		java.sql.Date expirationDateSql = new java.sql.Date(expirationDate.getTime());
+
+		cancellationInfo.setExpirationDate(expirationDateSql);
+		cancellationInfo.setCancellationDate(cancellationDateSql);
+		cancellationInfo.setCancellationPeriod(Integer.parseInt(cancellationPeriod.getText()));
+		subscriptionManagerAdmin.updateCancellation(cancellationInfo, new UpdateCancellationInfoCallback());
+
+	    SubscriptionView sv = new SubscriptionView(selectedSubscription);
+	    RootPanel.get("content").clear();
+	    RootPanel.get("content").add(sv);
+	}
+    }
+    
+
+
+    class UpdateCancellationInfoCallback implements AsyncCallback<Void> {
+
+	@Override
+	public void onFailure(Throwable caught) {
+	    // TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onSuccess(Void result) {
+	    SubscriptionView sv = new SubscriptionView(selectedSubscription);
+	    RootPanel.get("content").clear();
+	    RootPanel.get("content").add(sv);
+	}
 
     }
 
+    class DeleteCancellationInfoCallback implements AsyncCallback<Void> {
+
+	@Override
+	public void onFailure(Throwable caught) {
+	    // TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onSuccess(Void result) {
+	    SubscriptionView sv = new SubscriptionView(selectedSubscription);
+	    RootPanel.get("content").clear();
+	    RootPanel.get("content").add(sv);   
+	}
+    }
 }

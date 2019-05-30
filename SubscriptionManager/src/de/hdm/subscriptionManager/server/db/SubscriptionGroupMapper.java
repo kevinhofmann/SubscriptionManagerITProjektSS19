@@ -55,16 +55,16 @@ public class SubscriptionGroupMapper {
 	catch(SQLException e2) {
 	    e2.printStackTrace();
 	}
-	finally {
-	    if(con!=null) {
-		try {
-		    con.close();
-		}
-		catch(SQLException e ) {
-		    e.printStackTrace();
-		}
-	    }
-	}
+//	finally {
+//	    if(con!=null) {
+//		try {
+//		    con.close();
+//		}
+//		catch(SQLException e ) {
+//		    e.printStackTrace();
+//		}
+//	    }
+//	}
 	return subGroup;
     }
 
@@ -74,7 +74,7 @@ public class SubscriptionGroupMapper {
      */
     public SubscriptionGroup updateSubscriptionGroup(SubscriptionGroup subscriptionGroup) {
 	
-	String sql = "UPDATE subscriptiongroup SET name=? WHERE id=?";
+	String sql = "UPDATE subscriptiongroup SET name=? WHERE groupid=?";
 	
 	Connection con = DBConnection.connection();
 	
@@ -91,15 +91,15 @@ public class SubscriptionGroupMapper {
 	catch(SQLException e2) {
 	    e2.printStackTrace();
 	}
-	finally {	
-		if (con!=null) 
-			try {
-				con.close();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
+//	finally {	
+//		if (con!=null) 
+//			try {
+//				con.close();
+//			}
+//			catch(SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	return subscriptionGroup;
     }
     
@@ -120,30 +120,31 @@ public class SubscriptionGroupMapper {
 	catch(SQLException e2) {
 	    e2.printStackTrace();
 	}
-	finally {	
-	if (con!=null) 
-		try {
-			con.close();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-	}
-}
-    
+//	finally {	
+//		if (con!=null) 
+//			try {
+//				con.close();
+//			}
+//			catch(SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+    }
     
     /*
      * Methode zum Anzeigen aller Subscription Groups. 
      */
-    public ArrayList<SubscriptionGroup> findAll() {
+    public ArrayList<SubscriptionGroup> findAll(int userId) {
 		ArrayList<SubscriptionGroup> result = new ArrayList<>();
 
 		Connection con = DBConnection.connection();
 		try {
 
-			Statement stmt = con.createStatement();
+			PreparedStatement stmt = con.prepareStatement("SELECT * FROM subscriptiongroup WHERE userid=? ORDER BY groupid");
 
-			ResultSet rs = stmt.executeQuery("SELECT * FROM subscriptiongroup ORDER BY groupid");
+			stmt.setInt(1, userId);
+			
+			ResultSet rs = stmt.executeQuery();
 
 			while (rs.next()) {
 				SubscriptionGroup subgroup = new SubscriptionGroup();

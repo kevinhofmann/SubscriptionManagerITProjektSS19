@@ -69,6 +69,67 @@ public class CancellationMapper {
 	return cancellation;
     }
 
+
+    public void updateCancellation(Cancellation cancellation) {
+
+	Connection con = DBConnection.connection();
+
+	String sql = "UPDATE cancellation SET expirationdate=?, cancellationdate=?, cancellationperiod=? WHERE cancellationID=? ";
+
+	try {
+	    PreparedStatement stmt = con.prepareStatement(sql);
+
+	    stmt.setDate(1, cancellation.getExpirationDate());
+	    stmt.setDate(2, cancellation.getCancellationDate());
+	    stmt.setInt(3, cancellation.getCancellationPeriod());
+	    stmt.setInt(4, cancellation.getCancellationID());
+
+	    stmt.execute();
+
+	    System.out.println("Cancellation Update complete");
+	} 
+
+	catch(SQLException e2) {
+	    e2.printStackTrace();
+	    //		}
+	    //		finally {	
+	    //			if (con!=null) 
+	    //				try {
+	    //					con.close();
+	    //				}
+	    //				catch(SQLException e) {
+	    //					e.printStackTrace();
+	    //				}
+	}
+    }
+    
+    public void deleteCancellation(Cancellation cancellation) {
+	
+	Connection con = DBConnection.connection();
+	
+	try {
+	    PreparedStatement stmt = con.prepareStatement("DELETE FROM cancellation WHERE cancellationid=? ");
+	    
+	    stmt.setInt(1, cancellation.getCancellationID());
+	    stmt.executeUpdate();
+	    
+	    System.out.println("Cancellation deleted");
+	}
+	catch(SQLException e2) {
+	    e2.printStackTrace();
+	}
+//	finally {	
+//	if (con!=null) 
+//		try {
+//			con.close();
+//		}
+//		catch(SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
+    }
+
+
     public Cancellation getCancellationBySubscriptionId(int subscriptionID) {
 
 	Connection con = DBConnection.connection();
@@ -83,11 +144,11 @@ public class CancellationMapper {
 	    ResultSet rs = stmt.executeQuery();
 
 	    if(rs.next()) {
-	    cancellationInfo.setCancellationID(rs.getInt("cancellationID"));
-	    cancellationInfo.setExpirationDate(rs.getDate("expirationdate"));
-	    cancellationInfo.setCancellationDate(rs.getDate("cancellationdate"));
-	    cancellationInfo.setCancellationPeriod(rs.getInt("cancellationperiod"));
-	    cancellationInfo.setSubscriptionID(subscriptionID);
+		cancellationInfo.setCancellationID(rs.getInt("cancellationID"));
+		cancellationInfo.setExpirationDate(rs.getDate("expirationdate"));
+		cancellationInfo.setCancellationDate(rs.getDate("cancellationdate"));
+		cancellationInfo.setCancellationPeriod(rs.getInt("cancellationperiod"));
+		cancellationInfo.setSubscriptionID(subscriptionID);
 	    }
 	}
 

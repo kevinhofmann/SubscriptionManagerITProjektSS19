@@ -20,7 +20,9 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 
+import de.hdm.subscriptionManager.client.gui.SubscriptionAndGroupOverview;
 import de.hdm.subscriptionManager.client.gui.SubscriptionView;
+import de.hdm.subscriptionManager.client.gui.ViewAllSubscriptionsOfGroup;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
@@ -35,8 +37,9 @@ public class LeftMenu extends VerticalPanel {
     private ToggleButton subGroupButton = new ToggleButton();
     
     private Subscription subscription = new Subscription();
-    private Subscription selectedSubscription = new Subscription();
+    private static Subscription selectedSubscription = new Subscription();
     private SubscriptionGroup subscriptionGroup = new SubscriptionGroup();
+    private static SubscriptionGroup selectedSubscriptionGroup = new SubscriptionGroup();
 
     private ScrollPanel subCellListPanel = new ScrollPanel();
     private User user = new User();
@@ -62,7 +65,7 @@ public class LeftMenu extends VerticalPanel {
 	subscriptionCellList.setSelectionModel(selectionModel);
 	selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 	    public void onSelectionChange(SelectionChangeEvent event) {
-		Subscription selectedSubscription = selectionModel.getSelectedObject();
+		selectedSubscription = selectionModel.getSelectedObject();
 		if(selectedSubscription != null) {
 		    SubscriptionView subscriptionView = new SubscriptionView(selectedSubscription);
 		    Menubar menubar = new Menubar(selectedSubscription);
@@ -75,7 +78,7 @@ public class LeftMenu extends VerticalPanel {
 	displayMenu();
     }
     
-    public Subscription getSelectedSubscription() {
+    public static Subscription getSelectedSubscription() {
 	return selectedSubscription;
     }
     
@@ -97,15 +100,22 @@ public class LeftMenu extends VerticalPanel {
 	subscriptionGroupCellList.setSelectionModel(selectionModel);
 	selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
 	    public void onSelectionChange(SelectionChangeEvent event) {
-		SubscriptionGroup selectedSubscriptionGroup = selectionModel.getSelectedObject();
+		selectedSubscriptionGroup = selectionModel.getSelectedObject();
 		if(selectedSubscriptionGroup != null) {
-
+		    MenuBarCommand mbc = new MenuBarCommand(selectedSubscriptionGroup);
+		    ViewAllSubscriptionsOfGroup viewSubscriptions = new ViewAllSubscriptionsOfGroup();
+		    RootPanel.get("content").add(viewSubscriptions);
 		}
 	    }
 	});
 	
 	subCellListPanel.add(subscriptionGroupCellList);
 	displayMenu();
+    }
+    
+    
+    public static SubscriptionGroup getSelectedSubscriptionGroup() {
+	return selectedSubscriptionGroup;
     }
     
     
@@ -129,6 +139,9 @@ public class LeftMenu extends VerticalPanel {
 	    public void onClick(ClickEvent event) {
 		Menubar menuBar = new Menubar(subscription);
 		LeftMenu leftMenuSub = new LeftMenu();
+		SubscriptionAndGroupOverview subAndGroupOverview = new SubscriptionAndGroupOverview(subscription);
+		RootPanel.get("content").clear();
+		RootPanel.get("content").add(subAndGroupOverview);
 	    }
 	});
 	

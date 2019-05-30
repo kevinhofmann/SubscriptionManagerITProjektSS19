@@ -32,7 +32,7 @@ public class Menubar extends MenuBar {
     private MenuItem deleteSubscription = new MenuItem("Abo entfernen", new MenuBarCommand.DeleteSubscriptionCommand());
     private MenuItem deleteSubscriptionGroup = new MenuItem("Abogruppe löschen", new MenuBarCommand.DeleteSubscriptionGroupCommand());
     private MenuItem addSubscriptionToGroup = new MenuItem("Abo zur Gruppe", new MenuBarCommand.AddSubscriptionToGroupCommand());
-    private MenuItem removeSubscriptionFromGroup = new MenuItem("Abo aus Gruppe entfernen", new MenuBarCommand.RemoveSubscriptionToGroupCommand());
+    private MenuItem removeSubscriptionFromGroup = new MenuItem("Abo aus Gruppe entfernen", new MenuBarCommand.RemoveSubscriptionFromGroupCommand());
 
     
     public Menubar() {
@@ -43,21 +43,22 @@ public class Menubar extends MenuBar {
     public Menubar(Subscription sub) {
 	this.subscription = sub;
 	MenuBarCommand mbc = new MenuBarCommand(subscription);
-	addMenu.addItem("Neues Abo", new MenuBarCommand.CreateSubscriptionCommand());
-	editMenu.addItem("Abo bearbeiten", new MenuBarCommand.EditSubscriptionCommand());
-	deleteMenu.addItem("Abo löschen", new MenuBarCommand.DeleteSubscriptionCommand());
+	addMenu.addItem("Neu", new MenuBarCommand.CreateSubscriptionCommand());
+	editMenu.addItem("Bearbeiten", new MenuBarCommand.EditSubscriptionCommand());
+	deleteMenu.addItem("Löschen", new MenuBarCommand.DeleteSubscriptionCommand());
+	manageGroupMenu.addItem("Hinzufügen", new MenuBarCommand.AddSubscriptionToGroupCommand());
 	run();
     }
     
     public Menubar(SubscriptionGroup subGroup) {
-	addMenu.addItem("Neue Gruppe", new MenuBarCommand.CreateSubscriptionGroupCommand());
-	editMenu.addItem("Gruppe bearbeiten", new MenuBarCommand.EditSubscriptionGroupCommand());
-	deleteMenu.addItem("Gruppe löschen", new MenuBarCommand.DeleteSubscriptionGroupCommand());
+	addMenu.addItem("Neu", new MenuBarCommand.CreateSubscriptionGroupCommand());
+	editMenu.addItem("Bearbeiten", new MenuBarCommand.EditSubscriptionGroupCommand());
+	deleteMenu.addItem("Löschen", new MenuBarCommand.DeleteSubscriptionGroupCommand());
+	manageGroupMenu.addItem("Entfernen", new MenuBarCommand.RemoveSubscriptionFromGroupCommand());
 	run();
     }
     
     private void run() {
-	manageGroupMenu.addItem("Verwalten", new MenuBarCommand.AddSubscriptionToGroupCommand());
 	menuBarHorizontalPanel.add(addMenu);
 	menuBarHorizontalPanel.add(editMenu);
 	menuBarHorizontalPanel.add(deleteMenu);

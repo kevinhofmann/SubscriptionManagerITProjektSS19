@@ -11,11 +11,13 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import de.hdm.subscriptionManager.server.db.CancellationMapper;
 import de.hdm.subscriptionManager.server.db.SubscriptionGroupMapper;
 import de.hdm.subscriptionManager.server.db.SubscriptionMapper;
+import de.hdm.subscriptionManager.server.db.SubscriptionSubscriptionGroupMapper;
 import de.hdm.subscriptionManager.server.db.UserMapper;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdmin;
 import de.hdm.subscriptionManager.shared.bo.Cancellation;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
+import de.hdm.subscriptionManager.shared.bo.SubscriptionSubscriptionGroup;
 import de.hdm.subscriptionManager.shared.bo.User;
 
 @SuppressWarnings("serial")
@@ -31,6 +33,8 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     
     private CancellationMapper cancellationMapper = null;
     
+    private SubscriptionSubscriptionGroupMapper subscriptionSubscriptionGroupMapper = null;
+    
     
     public SubscriptionManagerImpl () throws IllegalArgumentException {
 	
@@ -41,6 +45,7 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 	this.subscriptionMapper = SubscriptionMapper.subscriptionMapper();
 	this.subscriptionGroupMapper = SubscriptionGroupMapper.subGroupMapper();
 	this.cancellationMapper = CancellationMapper.cancellationMapper();
+	this.subscriptionSubscriptionGroupMapper = SubscriptionSubscriptionGroupMapper.subscriptionSubscriptionGroupMapper();
     }
     
     
@@ -85,6 +90,16 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     }
     
     @Override
+    public void updateCancellation(Cancellation cancellation) throws IllegalArgumentException {
+	cancellationMapper.updateCancellation(cancellation);
+    }
+    
+    @Override 
+    public void deleteCancellation(Cancellation cancellation) throws IllegalArgumentException {
+	cancellationMapper.deleteCancellation(cancellation);
+    }
+    
+    @Override
     public Cancellation getCancellationBySubscriptionId(int subscriptionID) throws IllegalArgumentException {
 	return this.cancellationMapper.getCancellationBySubscriptionId(subscriptionID);
     }
@@ -117,15 +132,21 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 	 * @param suchprofil
 	 */
     @Override
-    public void addSubscriptionToGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException {
-
-    		this.subscriptionGroupMapper.updateSubscriptionGroup(sg);
-
+    public SubscriptionSubscriptionGroup addSubscriptionToGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException {
+	SubscriptionSubscriptionGroup sSG = new SubscriptionSubscriptionGroup();
+	sSG.setSubscriptionGroupID(sg.getId());
+	sSG.setSubscriptionID(s.getId());
+	sSG.setUserID(s.getUserID());
+	return this.subscriptionSubscriptionGroupMapper.createSubscriptionSubscriptionGroup(sSG);
     }
 
     @Override
     public void removeSubscriptionFromGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException {
-	// TODO Auto-generated method stub
+	SubscriptionSubscriptionGroup sSG = new SubscriptionSubscriptionGroup();
+	sSG.setSubscriptionGroupID(sg.getId());
+	sSG.setSubscriptionID(s.getId());
+	sSG.setUserID(s.getUserID());
+	subscriptionSubscriptionGroupMapper.removeSubscriptionSubscriptionGroup(sSG);
 
     }
 
@@ -138,14 +159,13 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     @Override
     public ArrayList<SubscriptionGroup> getAllSubscriptionGroups(int userId) throws IllegalArgumentException {
 
-    	return this.subscriptionGroupMapper.findAll();
+    	return this.subscriptionGroupMapper.findAll(userId);
     }
 
     @Override
-    public ArrayList<Subscription> getAllSubscriptionsWithinGroup(SubscriptionGroup sg)
-	    throws IllegalArgumentException {
-	// TODO Auto-generated method stub
-	return null;
+    public ArrayList<Subscription> getAllSubscriptionsWithinGroup(int groupId) throws IllegalArgumentException {
+	
+	return this.subscriptionMapper.getAllSubscriptionsWithinGroup(groupId);
     }
 
 }

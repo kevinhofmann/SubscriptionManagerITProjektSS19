@@ -28,7 +28,7 @@ public class SubscriptionSubscriptionGroupMapper {
 	try {
 	    Statement stmt = con.createStatement();
 
-	    PreparedStatement stmt1 = con.prepareStatement("INSERT INTO subscriptionmapping(userid, subscriptionid, groupid"
+	    PreparedStatement stmt1 = con.prepareStatement("INSERT INTO subscriptionmapping(userid, subscriptionid, groupid) "
 		    + "VALUES(?,?,?)",
 
 		    Statement.RETURN_GENERATED_KEYS);
@@ -36,20 +36,51 @@ public class SubscriptionSubscriptionGroupMapper {
 	    stmt1.setInt(2, subSubGroup.getSubscriptionID());
 	    stmt1.setInt(3, subSubGroup.getSubscriptionGroupID());
 
-	    System.out.println(stmt);
 	    stmt1.executeUpdate();
+	    System.out.println("Subscription added to Group");
 	}
 	catch(SQLException e2) {
 	    e2.printStackTrace();
-	}finally {	
-	    if (con!=null) 
-		try {
-		    con.close();
-		}
-	    catch(SQLException e) {
-		e.printStackTrace();
-	    }
 	}
+	//	finally {
+	//	    if(con!=null) {
+	//		try {
+	//		    con.close();
+	//		}
+	//		catch(SQLException e ) {
+	//		    e.printStackTrace();
+	//		}
+	//	    }
+	//	}
 	return subSubGroup;
+    }
+    
+    public void removeSubscriptionSubscriptionGroup(SubscriptionSubscriptionGroup subSubGroup) {
+	
+	Connection con = DBConnection.connection();
+	
+	try {
+	    
+	    PreparedStatement stmt = con.prepareStatement("DELETE FROM subscriptionmapping WHERE subscriptionid=? AND groupid=?");
+	
+	    stmt.setInt(1, subSubGroup.getSubscriptionID());
+	    stmt.setInt(2, subSubGroup.getSubscriptionGroupID());
+	    
+	    stmt.executeUpdate();
+	    
+	    System.out.println("Subscription removed from Group");
+	}
+	catch(SQLException e2) {
+	    e2.printStackTrace();
+	}
+//	finally {	
+//	if (con!=null) 
+//		try {
+//			con.close();
+//		}
+//		catch(SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
     }
 }

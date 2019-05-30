@@ -5,7 +5,7 @@ import java.sql.Date;
 public class Subscription extends BusinessObject{
 
     /**
-     * Dient zum Serialisieren von Objekten für eine RPC fähigen Austausch zwischen Server und Client.
+     * Dient zum Serialisieren von Objekten fï¿½r eine RPC fï¿½higen Austausch zwischen Server und Client.
      */
     private static final long serialVersionUID = 1L;
 
@@ -24,6 +24,11 @@ public class Subscription extends BusinessObject{
     private boolean cancellationRelevance = false;
     
     private int userID = 0;
+    
+    private java.util.Date endDate = null;
+    
+    private double expensesSinceStart = 0.0;
+
 
     public String getName() {
 	return name;
@@ -82,6 +87,29 @@ public class Subscription extends BusinessObject{
     
     public void setUserID(int userID) {
 	this.userID = userID;
+    }
+
+    /**
+     * @return the endDate
+     */
+    public java.util.Date getEndDate() {
+	return endDate;
+    }
+
+    /**
+     * @param endDate the endDate to set
+     */
+    public void setEndDate(java.util.Date endDate) {
+	this.endDate = endDate;
+    }
+    
+
+    public double getExpensesSinceStart() {
+        return expensesSinceStart;
+    }
+
+    public void setExpensesSinceStart(double expensesSinceStart) {
+        this.expensesSinceStart = expensesSinceStart;
     }
 
 }

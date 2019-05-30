@@ -77,7 +77,7 @@ public class SubscriptionMapper {
      */
     public Subscription updateSubscription(Subscription subscription) {
 	
-	String sql = "UPDATE subscription SET name=?, price=?, note=?, startdate=?, cancellationrelevance=? WHERE id=?";
+	String sql = "UPDATE subscription SET name=?, price=?, note=?, startdate=?, cancellationrelevance=? WHERE subscriptionid=?";
 	
 	Connection con = DBConnection.connection();
 	
@@ -93,19 +93,19 @@ public class SubscriptionMapper {
 	    
 	    stmt.executeUpdate();
 	    
-	    System.out.println("Update complete");
+	    System.out.println("Subscription Update complete");
 	}
 	catch(SQLException e2) {
 	    e2.printStackTrace();
-	}
-	finally {	
-		if (con!=null) 
-			try {
-				con.close();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
+//	}
+//	finally {	
+//		if (con!=null) 
+//			try {
+//				con.close();
+//			}
+//			catch(SQLException e) {
+//				e.printStackTrace();
+//			}
 		}
 	return subscription;
     }
@@ -123,19 +123,21 @@ public class SubscriptionMapper {
 	    
 	    stmt.setInt(1, subscription.getId());
 	    stmt.executeUpdate();
+	    
+	    System.out.println("Subscription deleted");
 	}
 	catch(SQLException e2) {
 	    e2.printStackTrace();
 	}
-	finally {	
-	if (con!=null) 
-		try {
-			con.close();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-	}
+//	finally {	
+//	if (con!=null) 
+//		try {
+//			con.close();
+//		}
+//		catch(SQLException e) {
+//			e.printStackTrace();
+//		}
+//	}
     }
     
     
@@ -154,7 +156,7 @@ public class SubscriptionMapper {
 	    ResultSet rs = stmt.executeQuery();
 	    
 	    /*
-	     * Für jeden Tupel eine neues Subscription Objekt erstellen und
+	     * Fï¿½r jeden Tupel eine neues Subscription Objekt erstellen und
 	     * in die ArrayList packen
 	     */
 	    while(rs.next()) {
@@ -208,8 +210,44 @@ public class SubscriptionMapper {
 		}
 
 		return result;
-
 	}
+    
+    public ArrayList<Subscription> getAllSubscriptionsWithinGroup(int groupID) {
+	
+	ArrayList<Subscription> result = new ArrayList<>();
+	
+	Connection con = DBConnection.connection();
+	try {
+	    
+	    PreparedStatement stmt = con.prepareStatement("SELECT `subscription`.`SubscriptionID`, `subscription`.`Name`, `subscription`.`Price`, `subscription`.`Note`, `subscription`.`StartDate`, `subscription`.`CancellationRelevance`, `subscription`.`UserID`, `subscriptiongroup`.`groupID`, `cancellation`.`expirationdate` "
+		    					+ "FROM `subscriptiongroup` INNER JOIN `subscriptionmapping` "
+		    					+ "ON `subscriptionmapping`.`groupid` = `subscriptiongroup`.`groupid` INNER JOIN `subscription` "
+		    					+ "ON `subscriptionmapping`.`subscriptionid` = `subscription`.`subscriptionid` LEFT JOIN `cancellation` "
+		    					+ "ON `cancellation`.`subscriptionid` = `subscription`.`subscriptionid` WHERE `subscriptiongroup`.`groupid` = ? ORDER BY name ASC ");
+	    
+	    stmt.setInt(1, groupID);
+	    
+	    ResultSet rs = stmt.executeQuery();
+	    
+	    while(rs.next()) {
+		Subscription sub = new Subscription();
+		sub.setId(rs.getInt("subscriptionid"));
+		sub.setName(rs.getString("name"));
+		sub.setPrice(rs.getInt("price"));
+		sub.setNote(rs.getString("note"));
+		sub.setStartDate(rs.getDate("startDate"));
+		sub.setCancellationRelevance(rs.getBoolean("cancellationRelevance"));
+		sub.setUserID(rs.getInt("userId"));
+		sub.setEndDate(rs.getDate("expirationDate"));
+		
+		result.add(sub);
+	    }
+	
+	} catch(SQLException e) {
+	    e.printStackTrace();
+	}
+	return result;
+    }
     
     
 }

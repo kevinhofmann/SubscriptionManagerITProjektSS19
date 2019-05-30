@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import de.hdm.subscriptionManager.shared.bo.Cancellation;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
+import de.hdm.subscriptionManager.shared.bo.SubscriptionSubscriptionGroup;
 import de.hdm.subscriptionManager.shared.bo.User;
 
 
@@ -31,6 +32,10 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 
 	public Cancellation createCancellation(Date expirationDate, Date cancellationDate, int cancellationPeriod, int subscriptionID) throws IllegalArgumentException;
 	
+	public void updateCancellation(Cancellation cancellation) throws IllegalArgumentException;
+	
+	public void deleteCancellation(Cancellation cancellation) throws IllegalArgumentException;
+	
 	public Cancellation getCancellationBySubscriptionId(int subscriptionID) throws IllegalArgumentException;
 	
 	public void updateSubscription(Subscription s) throws IllegalArgumentException;
@@ -41,7 +46,7 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	
 	public void deleteSubscriptionGroup(SubscriptionGroup sg) throws IllegalArgumentException;
 	
-	public void addSubscriptionToGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException;
+	public SubscriptionSubscriptionGroup addSubscriptionToGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException;
 	
 	public void removeSubscriptionFromGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException;
 	
@@ -49,5 +54,5 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	
 	public ArrayList<SubscriptionGroup> getAllSubscriptionGroups(int userId) throws IllegalArgumentException;
 	
-	public ArrayList<Subscription> getAllSubscriptionsWithinGroup(SubscriptionGroup sg) throws IllegalArgumentException;
+	public ArrayList<Subscription> getAllSubscriptionsWithinGroup(int groupId) throws IllegalArgumentException;
 }

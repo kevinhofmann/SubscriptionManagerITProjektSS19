@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import de.hdm.subscriptionManager.shared.bo.Cancellation;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
+import de.hdm.subscriptionManager.shared.bo.SubscriptionSubscriptionGroup;
 import de.hdm.subscriptionManager.shared.bo.User;
 
 public interface SubscriptionManagerAdminAsync {
@@ -31,9 +32,13 @@ public interface SubscriptionManagerAdminAsync {
 
     void createCancellation(Date expirationDate, Date cancellationDate, int cancellationPeriod, int subscriptionID, AsyncCallback<Cancellation> callback);
     
+    void updateCancellation(Cancellation cancellation, AsyncCallback<Void> callback);
+    
+    void deleteCancellation(Cancellation cancellation, AsyncCallback<Void> callback);
+    
     void deleteSubscriptionGroup(SubscriptionGroup sg, AsyncCallback<Void> callback);
 
-    void addSubscriptionToGroup(Subscription s, SubscriptionGroup sg, AsyncCallback<Void> callback);
+    void addSubscriptionToGroup(Subscription s, SubscriptionGroup sg, AsyncCallback<SubscriptionSubscriptionGroup> callback);
 
     void getAllSubscriptions(int userId, AsyncCallback<ArrayList<Subscription>> callback);
 
@@ -41,5 +46,5 @@ public interface SubscriptionManagerAdminAsync {
 
     void getAllSubscriptionGroups(int userId, AsyncCallback<ArrayList<SubscriptionGroup>> callback);
 
-    void getAllSubscriptionsWithinGroup(SubscriptionGroup sg, AsyncCallback<ArrayList<Subscription>> callback);
+    void getAllSubscriptionsWithinGroup(int groupId, AsyncCallback<ArrayList<Subscription>> callback);
 }
