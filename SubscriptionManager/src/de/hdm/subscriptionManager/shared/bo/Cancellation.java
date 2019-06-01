@@ -18,6 +18,8 @@ public class Cancellation extends BusinessObject {
     private int cancellationPeriod = 0;
 
     private int subscriptionID = 0;
+    
+    private long daysRemainingCancellationDate = 0;
 
     /**
      * @return Auslaufdatum des Abos
@@ -81,6 +83,20 @@ public class Cancellation extends BusinessObject {
      */
     public void setCancellationID(int cancellationID) {
 	this.cancellationID = cancellationID;
+    }
+
+    /**
+     * @return the daysRemainingCancellationDate
+     */
+    public long getDaysRemainingCancellationDate() {
+	return daysRemainingCancellationDate;
+    }
+
+    /**
+     * @param l the daysRemainingCancellationDate to set
+     */
+    public void setDaysRemainingCancellationDate(long l) {
+	this.daysRemainingCancellationDate = l;
     }
 
 

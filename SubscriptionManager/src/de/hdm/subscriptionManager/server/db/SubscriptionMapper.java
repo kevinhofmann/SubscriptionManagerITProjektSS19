@@ -249,5 +249,38 @@ public class SubscriptionMapper {
 	return result;
     }
     
-    
+    public Subscription getSubscriptionBySubscriptionID(int subscriptionID) {
+	
+	Subscription sub = new Subscription();
+	    
+	Connection con = DBConnection.connection();
+	
+	try {
+	    
+	    PreparedStatement stmt = con.prepareStatement("SELECT * FROM subscription WHERE subscriptionid = ? ");
+	
+	    stmt.setInt(1, subscriptionID);
+	    
+	    ResultSet rs = stmt.executeQuery();
+	    
+	    while(rs.next()) {
+		Subscription subscription = new Subscription();
+		subscription.setId(rs.getInt("subscriptionid"));
+		subscription.setName(rs.getString("name"));
+		subscription.setPrice(rs.getFloat("price"));
+		subscription.setNote(rs.getString("note"));
+		subscription.setStartDate(rs.getDate("startdate"));
+		subscription.setCancellationRelevance(rs.getBoolean("cancellationrelevance"));
+		subscription.setUserID(rs.getInt("userid"));
+		
+		sub = subscription;
+		
+		System.out.println("Subscription catched successfully");
+	    }
+
+	} catch(SQLException e) {
+	    e.printStackTrace();
+	}
+	return sub;
+    }
 }

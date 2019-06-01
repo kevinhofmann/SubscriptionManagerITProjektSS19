@@ -6,8 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import de.hdm.subscriptionManager.shared.bo.Cancellation;
+import de.hdm.subscriptionManager.shared.bo.Subscription;
 
 public class CancellationMapper {
 
@@ -166,6 +168,38 @@ public class CancellationMapper {
 	//	    }
 	//	}
 	return cancellationInfo;
-
+    }
+    
+    public ArrayList<Cancellation> getAllCancellationInfoByUserId(int userId) {
+	
+	ArrayList<Cancellation> result = new ArrayList<>();
+	
+	Connection con = DBConnection.connection();
+	
+	try {
+	    PreparedStatement stmt = con.prepareStatement("SELECT `subscription`.`SubscriptionID`, `subscription`.`userID`, `subscription`.`CancellationRelevance`, `cancellation`.`expirationdate`, `cancellation`.`cancellationdate`, `cancellation`.`cancellationperiod`, `cancellation`.`cancellationid` "
+		    + "FROM `subscription` JOIN `cancellation` "
+		    + "ON `subscription`.`SubscriptionID` =  `cancellation`.`SubscriptionID` "
+		    + "WHERE `subscription`.`userID` = ? AND `subscription`.`CancellationRelevance` = true");
+	    
+	    stmt.setInt(1, userId);
+	    
+	    ResultSet rs = stmt.executeQuery();
+	    
+	    while(rs.next()) {
+		Cancellation can = new Cancellation();
+		can.setCancellationPeriod(rs.getInt("cancellationperiod"));
+		can.setCancellationDate(rs.getDate("cancellationdate"));
+		can.setExpirationDate(rs.getDate("expirationdate"));
+		can.setCancellationID(rs.getInt("cancellationid"));
+		can.setSubscriptionID(rs.getInt("subscriptionid"));
+		result.add(can);
+		}
+	    
+	
+	} catch(SQLException e) {
+	    e.printStackTrace();
+	}
+	return result;
     }
 }

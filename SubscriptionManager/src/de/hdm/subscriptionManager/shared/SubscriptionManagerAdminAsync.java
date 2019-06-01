@@ -30,6 +30,8 @@ public interface SubscriptionManagerAdminAsync {
     
     void getCancellationBySubscriptionId(int subscriptionID, AsyncCallback<Cancellation> callback) throws IllegalArgumentException;
 
+    void getAllCancellationInfoByUserId(int userId, AsyncCallback<ArrayList<Cancellation>> callback) throws IllegalArgumentException;
+    
     void createCancellation(Date expirationDate, Date cancellationDate, int cancellationPeriod, int subscriptionID, AsyncCallback<Cancellation> callback);
     
     void updateCancellation(Cancellation cancellation, AsyncCallback<Void> callback);
@@ -42,6 +44,8 @@ public interface SubscriptionManagerAdminAsync {
 
     void getAllSubscriptions(int userId, AsyncCallback<ArrayList<Subscription>> callback);
 
+    void getSubscriptionBySubscriptionID(int subscriptionID, AsyncCallback<Subscription> callback);
+    
     void removeSubscriptionFromGroup(Subscription s, SubscriptionGroup sg, AsyncCallback<Void> callback);
 
     void getAllSubscriptionGroups(int userId, AsyncCallback<ArrayList<SubscriptionGroup>> callback);

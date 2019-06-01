@@ -38,6 +38,8 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	
 	public Cancellation getCancellationBySubscriptionId(int subscriptionID) throws IllegalArgumentException;
 	
+	public ArrayList<Cancellation> getAllCancellationInfoByUserId(int userId) throws IllegalArgumentException;
+	
 	public void updateSubscription(Subscription s) throws IllegalArgumentException;
 	
 	public void updateSubscriptionGroup(SubscriptionGroup sg) throws IllegalArgumentException;
@@ -49,6 +51,8 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	public SubscriptionSubscriptionGroup addSubscriptionToGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException;
 	
 	public void removeSubscriptionFromGroup(Subscription s, SubscriptionGroup sg) throws IllegalArgumentException;
+	
+	public Subscription getSubscriptionBySubscriptionID(int subscriptionID) throws IllegalArgumentException;
 	
 	public ArrayList<Subscription> getAllSubscriptions(int userId) throws IllegalArgumentException;
 	

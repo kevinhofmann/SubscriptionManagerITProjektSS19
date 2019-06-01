@@ -103,7 +103,12 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     public Cancellation getCancellationBySubscriptionId(int subscriptionID) throws IllegalArgumentException {
 	return this.cancellationMapper.getCancellationBySubscriptionId(subscriptionID);
     }
-
+    
+    @Override
+    public ArrayList<Cancellation> getAllCancellationInfoByUserId(int userId) throws IllegalArgumentException {
+	return this.cancellationMapper.getAllCancellationInfoByUserId(userId);
+    }
+	
     @Override
     public void updateSubscription(Subscription s) throws IllegalArgumentException {
 	subscriptionMapper.updateSubscription(s);
@@ -150,6 +155,11 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 
     }
 
+    @Override
+    public Subscription getSubscriptionBySubscriptionID(int subscriptionID) throws IllegalArgumentException {
+	return this.subscriptionMapper.getSubscriptionBySubscriptionID(subscriptionID);
+    }
+    
     @Override
     public ArrayList<Subscription> getAllSubscriptions(int userId) throws IllegalArgumentException {
 
