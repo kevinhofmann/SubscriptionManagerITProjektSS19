@@ -28,6 +28,13 @@ import de.hdm.subscriptionManager.shared.bo.Cancellation;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.User;
 
+
+/*
+ * Klasse, welche als Formular zum Befüllen von Subscription-Objekt Variablen dient. Die einzelnen Objektvariablen
+ * werden in einem FlexTable aufgelistet und mittels TextBoxen können Werte für die Variablen festgelegt werden, welche
+ * dann bei der Speicherung eines neuen Sub-Objektes per RPC-Call an die DB übermittelt werden.
+ */
+
 public class SubscriptionForm extends VerticalPanel {
 
 
@@ -65,7 +72,7 @@ public class SubscriptionForm extends VerticalPanel {
     private Boolean cancellationRelevance = false;
     private VerticalPanel textBoxPanel = new VerticalPanel();
 
-    private HTML headline= new HTML("Ein neues Abo anlegen<br>");
+    private HTML headline= new HTML("");
     private Label nameLabel = new Label("Aboname");
     private Label priceLabel = new Label("Monatspreis");
     private Label noteLabel = new Label("Anmerkung");
@@ -77,13 +84,25 @@ public class SubscriptionForm extends VerticalPanel {
 
 
 
+    /*
+     * Standardkonstruktor, welcher aufgerufen wird wenn ein neues Abo erstellt werden soll. Das anzuzeigende Formular
+     * (TextBoxen) sind somit leer.
+     */
     public SubscriptionForm() {
+	headline.setHTML("Ein neues Abo anlegen<br>");
 	cancellationRelevanceSelector.addItem("Ja");
 	cancellationRelevanceSelector.addItem("Nein");
 	submit.addClickHandler(new submitFormClickHandler());
     }
 
+
+    /*
+     * Parametrisierter Konstruktor welcher ein Abo Objekt erwartet. Dieser Konstruktor wird verwendet, wenn ein bereits 
+     * angelegtes Abo bearbeitet werden soll. Die bereits vorhandenen Werte der Objektvariablen werden ausgelesen und als 
+     * vordefinierter Text in den TextBoxen zur Anzeige gebracht. 
+     */
     public SubscriptionForm(Subscription subscription) {
+	headline.setHTML("Ausgewähltes Abo bearbeiten<br>");
 	cancellationRelevanceSelector.addItem("Ja");
 	cancellationRelevanceSelector.addItem("Nein");
 	submit.addClickHandler(new updateFormClickHandler());
@@ -114,6 +133,11 @@ public class SubscriptionForm extends VerticalPanel {
 	}
     }
 
+
+    /*
+     * Methode, welche den FlexTable zur Anzeige des Formulares generiert. Hier wird lediglich die Basis des Formulares
+     * erzeugt, die TextBoxen werden separat erzeugt.
+     */
     public FlexTable constructTable() {
 
 	formTable.setWidget(0, 0, headline);
@@ -155,7 +179,6 @@ public class SubscriptionForm extends VerticalPanel {
 
 	formTable.setWidget(8, 2, calculateCancellationDateButton);
 
-
 	cancellationRelevanceSelector.addChangeHandler(new ChangeHandler() {
 
 	    @Override
@@ -191,7 +214,10 @@ public class SubscriptionForm extends VerticalPanel {
     }
 
 
-
+    /*
+     * OnLoad Methode ruft die constructTable Methode zunächst auf um den davon zurückgegebenen FlexTable um die
+     * TextBoxen für die Nutzereingabe zu erzeugen und dem Table hinzuzufügen. 
+     */
     protected void onLoad() {
 	constructTable();
 
@@ -214,13 +240,14 @@ public class SubscriptionForm extends VerticalPanel {
 	calculateCancellationDateButton.addClickHandler(new calculateCancellationDateClickHandler());
 
 	reset.addClickHandler(new resetFormClickHandler());
+	RootPanel.get("content").clear();
 	RootPanel.get("content").add(textBoxPanel);
 
     }
 
 
     /*
-     * Klasse um den K�ndigungstag anhand der K�ndigungsfrist und des Auslaufdatums zu berechnen
+     * Innere Klasse um den Kündigungstag anhand der Kündigungsfrist und des Auslaufdatums zu berechnen
      */
     class calculateCancellationDateClickHandler implements ClickHandler {
 
@@ -244,6 +271,11 @@ public class SubscriptionForm extends VerticalPanel {
 	}
     }
 
+
+    /*
+     * Innere Klasse, welche auf Basis der Nutzereingaben einen RPC-Call auslöst, welcher das Subscription
+     * Objekt in der Implementierungsklasse erstellt und in der Datenbank abspeichert.
+     */
     class submitFormClickHandler implements ClickHandler {
 
 	@Override
@@ -259,12 +291,18 @@ public class SubscriptionForm extends VerticalPanel {
 	}
     }
 
+
+    /*
+     * Innere Klasse, welche das Ergebnis des RPC Calls zurückliefert. Ist für die Subscription eine cancellationRelevance
+     * selektiert, wird zugleich ein neues Cancellation Objekt erzeugt welches die nötigen Informationen zu 
+     * Ablauf und Kündigungstag enthält. Zuletzt wird eine neue Instanz von LeftMenu aufgerufen sowie die Ansicht
+     * des neu erstellten Abos über die SubscriptionView Klasse instantiiert. 
+     */
     public class CreateSubscriptionCallback implements AsyncCallback<Subscription> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-	    Window.alert("Klappt nicht");
-
+	    Window.alert(caught.getMessage());
 	}
 
 	@Override
@@ -290,12 +328,16 @@ public class SubscriptionForm extends VerticalPanel {
 	}
     }
 
+
+    /*
+     * Callback zur Erstellung des Cancellation Objektes. Neue Instanz von LeftMenu wird aufgerufen sowie die Ansicht
+     * des neu erstellten Abos über die SubscriptionView Klasse instantiiert. 
+     */
     public class CreateCancellationCallback implements AsyncCallback<Cancellation> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-	    // TODO Auto-generated method stub
-
+	    Window.alert(caught.getMessage());
 	}
 
 	@Override
@@ -304,11 +346,16 @@ public class SubscriptionForm extends VerticalPanel {
 	    SubscriptionView sv = new SubscriptionView(selectedSubscription);
 	    RootPanel.get("content").clear();
 	    RootPanel.get("content").add(sv);
-
 	}
-
     }
 
+
+    /*
+     * Diese innere Klasse wird durch den RPC-Call aufgerufen, der ein bereits vorhandenes Cancellation Objekt nutzt, 
+     * um Informationen über dieses Objekt aus der DB auszulesen. Dies ist der Fall, wenn die Klasse mittels 
+     * Subscription Objekt als Parameter instantiiert wird. Infolgedessen werden die Werte des bestehenden Abos in die 
+     * FlexTable TextBoxen geladen
+     */
     public class GetCancellationInfoCallback implements AsyncCallback<Cancellation> {
 
 	@Override
@@ -335,30 +382,15 @@ public class SubscriptionForm extends VerticalPanel {
 	    cancellationYear.setText(extractedCancellationYear);
 
 	    cancellationPeriod.setText(Integer.toString(cancellationInfo.getCancellationPeriod()));
-
 	}
     }
 
-    class resetFormClickHandler implements ClickHandler {
 
-	@Override
-	public void onClick(ClickEvent event) {
-	    name.setText("");
-	    price.setText("");
-	    note.setText("");
-	    day.setText("");
-	    month.setText("");
-	    year.setText("");
-	    cancellationDay.setText("");
-	    cancellationMonth.setText("");
-	    cancellationYear.setText("");
-	    expirationDay.setText("");
-	    expirationMonth.setText("");
-	    expirationYear.setText("");
-	    cancellationPeriod.setText("");
-	}
-    }
-
+    /*
+     * Diese innere Klasse mit dem Interface ClickHandler wird instantiiert wenn der parametrisierte Konstruktor 
+     * aufgerufen wurde. Ein Abo wird in diesem Fall geupdatet und nicht neu erstellt, somit ist der zugrundeliegende
+     * RPC-Call auch ein anderer. 
+     */
     class updateFormClickHandler implements ClickHandler {
 
 	@Override
@@ -383,48 +415,46 @@ public class SubscriptionForm extends VerticalPanel {
     }
 
 
+    /*
+     * Ergebnis des UpdateSubscription RPC. Entsprechend werden die Werte des Cancellation Objektes aktualisiert so wie
+     * der Nutzer diese im Formular eingegeben hat. Die Subscription wird im Anschluss zur Anzeige gebracht.
+     */
     class UpdateSubscriptionCallback implements AsyncCallback<Void> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-	    // TODO Auto-generated method stub
-
+	    Window.alert(caught.getMessage());
 	}
 
 	@Override
 	public void onSuccess(Void result) {
 
-		Date cancellationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
-			.parse(Integer.parseInt(cancellationYear.getText()) + "-" + Integer.parseInt(cancellationMonth.getText()) + "-" + Integer.parseInt(cancellationDay.getText()));
-		java.sql.Date cancellationDateSql = new java.sql.Date(cancellationDate.getTime());
+	    Date cancellationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
+		    .parse(Integer.parseInt(cancellationYear.getText()) + "-" + Integer.parseInt(cancellationMonth.getText()) + "-" + Integer.parseInt(cancellationDay.getText()));
+	    java.sql.Date cancellationDateSql = new java.sql.Date(cancellationDate.getTime());
 
-		Date expirationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
-			.parse(Integer.parseInt(expirationYear.getText()) + "-" + Integer.parseInt(expirationMonth.getText()) + "-" + Integer.parseInt(expirationDay.getText()));
-		java.sql.Date expirationDateSql = new java.sql.Date(expirationDate.getTime());
+	    Date expirationDate = DateTimeFormat.getFormat("yyyy-MM-dd")
+		    .parse(Integer.parseInt(expirationYear.getText()) + "-" + Integer.parseInt(expirationMonth.getText()) + "-" + Integer.parseInt(expirationDay.getText()));
+	    java.sql.Date expirationDateSql = new java.sql.Date(expirationDate.getTime());
 
-		cancellationInfo.setExpirationDate(expirationDateSql);
-		cancellationInfo.setCancellationDate(cancellationDateSql);
-		cancellationInfo.setCancellationPeriod(Integer.parseInt(cancellationPeriod.getText()));
-		subscriptionManagerAdmin.updateCancellation(cancellationInfo, new UpdateCancellationInfoCallback());
-
-	    SubscriptionView sv = new SubscriptionView(selectedSubscription);
-	    RootPanel.get("content").clear();
-	    RootPanel.get("content").add(sv);
+	    cancellationInfo.setExpirationDate(expirationDateSql);
+	    cancellationInfo.setCancellationDate(cancellationDateSql);
+	    cancellationInfo.setCancellationPeriod(Integer.parseInt(cancellationPeriod.getText()));
+	    subscriptionManagerAdmin.updateCancellation(cancellationInfo, new UpdateCancellationInfoCallback());
 	}
     }
-    
 
 
     class UpdateCancellationInfoCallback implements AsyncCallback<Void> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-	    // TODO Auto-generated method stub
-
+	    Window.alert(caught.getMessage());
 	}
 
 	@Override
 	public void onSuccess(Void result) {
+	    LeftMenu lm = new LeftMenu();
 	    SubscriptionView sv = new SubscriptionView(selectedSubscription);
 	    RootPanel.get("content").clear();
 	    RootPanel.get("content").add(sv);
@@ -432,19 +462,27 @@ public class SubscriptionForm extends VerticalPanel {
 
     }
 
-    class DeleteCancellationInfoCallback implements AsyncCallback<Void> {
+
+    /*
+     * Über den ClickHandler werden die Eingaben in die TextBoxen wieder zurückgesetzt.
+     */
+    class resetFormClickHandler implements ClickHandler {
 
 	@Override
-	public void onFailure(Throwable caught) {
-	    // TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onSuccess(Void result) {
-	    SubscriptionView sv = new SubscriptionView(selectedSubscription);
-	    RootPanel.get("content").clear();
-	    RootPanel.get("content").add(sv);   
+	public void onClick(ClickEvent event) {
+	    name.setText("");
+	    price.setText("");
+	    note.setText("");
+	    day.setText("");
+	    month.setText("");
+	    year.setText("");
+	    cancellationDay.setText("");
+	    cancellationMonth.setText("");
+	    cancellationYear.setText("");
+	    expirationDay.setText("");
+	    expirationMonth.setText("");
+	    expirationYear.setText("");
+	    cancellationPeriod.setText("");
 	}
     }
 }

@@ -22,6 +22,11 @@ import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionSubscriptionGroup;
 
+
+/*
+ * Klasse, welche eine DialogBox erzeugt mit deren Hilfe ein selektiertes Abo in eine Abogruppe hinzugefügt werden kann.
+ * Zuvor muss im LeftMenu in der CellList ein Abo ausgewählt worden sein. 
+ */
 public class AddSubscriptionToGroupDialogBox extends DialogBox {
 
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
@@ -39,6 +44,11 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
 
     private HTML nameLabel;
 
+
+    /*
+     * Aus der Klasse LeftMenu wird mittels Getter-Methode das selektierte Subscription Objekt ausgelesen sowie ein
+     * RPC-Call eingeleitet, der alle vom User angelegten Sub-Groups abfragt.
+     */
     public void onLoad() {
 	this.subscription = LeftMenu.getSelectedSubscription();
 	if(subscription.getId() > 0) {
@@ -49,6 +59,10 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
 	}
     }
 
+
+    /*
+     * Die Methode showDialogPanel() spezifiziert das anzuzeigende DialogPanel und fügt die einzelnen Elemente dem Panel hinzu.
+     */
     public void showDialogPanel() {
 	submitButton.addClickHandler(new AddSubscriptionToGroupClickHandler());
 	abortButton.addClickHandler(new AbortClickHandler());
@@ -69,12 +83,16 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
     }
 
 
+    /*
+     * Callback, der die ArrayListe von angelegten Sub-Groups des Users zurückgibt. Diese werden in eine lokale ArrayList
+     * übernommen und zugleich in die ListBox, mittels welcher die Selektion stattfindet, in welche Gruppe das Sub-Objekt eingefügt
+     * werden soll. Im Anschluss wird das Panel zur Anzeige gebracht.
+     */
     class GetAllSubscriptionGroupsCallback implements AsyncCallback<ArrayList<SubscriptionGroup>> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-	    // TODO Auto-generated method stub
-
+	    Window.alert(caught.getMessage());
 	}
 
 	@Override
@@ -89,6 +107,12 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
 	}
     }
 
+
+    /*
+     * Lokale Klasse die das Interface ClickHandler implementiert. Beim Klick auf den "Submit" Button, wird überprüft,
+     * welche Sub-Group vom User in der ListBox ausgewählt wurde und dann über einen RPC-Call wird das entsprechende Abo
+     * in die ausgewählte Gruppe übernommen.
+     */
     class AddSubscriptionToGroupClickHandler implements ClickHandler {
 
 	@Override
@@ -102,24 +126,28 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
 	}
 
     }
-    
-    
-   class AddSubscriptionToGroupCallback implements AsyncCallback<SubscriptionSubscriptionGroup> {
 
-    @Override
-    public void onFailure(Throwable caught) {
-	// TODO Auto-generated method stub
-	
+
+    /*
+     * Callback als Ergebnis der Speicherung eines Sub-Objektes in einer Sub-Group.
+     */
+    class AddSubscriptionToGroupCallback implements AsyncCallback<SubscriptionSubscriptionGroup> {
+
+	@Override
+	public void onFailure(Throwable caught) {
+	    Window.alert(caught.getMessage());
+	}
+
+	@Override
+	public void onSuccess(SubscriptionSubscriptionGroup result) {
+	    hide();
+	}
     }
 
-    @Override
-    public void onSuccess(SubscriptionSubscriptionGroup result) {
-	hide();
-	
-    }
-       
-   }
 
+    /*
+     * ClickHandler, mit welchem die Aktion abgebrochen wird und die DialogBox wieder ausgeblendet wird.
+     */
     class AbortClickHandler implements ClickHandler {
 
 	@Override

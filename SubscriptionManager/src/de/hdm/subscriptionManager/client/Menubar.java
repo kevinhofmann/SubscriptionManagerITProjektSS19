@@ -11,6 +11,12 @@ import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
 import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 
+/*
+ * Die Klasse Menubar erzeugt die Aktionsbuttons über dem content div Element. Die Buttons dienen dazu,
+ * Aktionen wie das hinzufügen, bearbeiten, löschen und verwalten von Subscription + SubGroup zu 
+ * ermöglichen.In der separaten Klasse MenuBarCommand werden die auszuführenden Befehle, die beim Klick
+ * auf den Button ausgeführt werden sollen, implementiert. 
+ */
 public class Menubar extends MenuBar {
   
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
@@ -35,6 +41,11 @@ public class Menubar extends MenuBar {
     private MenuItem removeSubscriptionFromGroup = new MenuItem("Abo aus Gruppe entfernen", new MenuBarCommand.RemoveSubscriptionFromGroupCommand());
 
     
+    /*
+     * Über verschiedene Konstruktoren, auch parametrisierte, werden die zugrundeliegenden Commands gesteuert.
+     * Ist im LeftMenu der ToggleButton auf Subscription true, so wird entsprechend ein Subscription
+     * Objekt an die Klasse Menubar übergeben, was dann zur Initialisierung der Subscription Commands dient.
+     */
     public Menubar() {
 	RootPanel.get("menubar").clear();
 	run();

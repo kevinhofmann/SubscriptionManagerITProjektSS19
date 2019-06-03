@@ -5,7 +5,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import de.hdm.subscriptionManager.client.gui.AddSubscriptionToGroupDialogBox;
-import de.hdm.subscriptionManager.client.gui.CreateSubscription;
 import de.hdm.subscriptionManager.client.gui.CreateSubscriptionGroupDialogBox;
 import de.hdm.subscriptionManager.client.gui.DeleteSubscriptionDialogBox;
 import de.hdm.subscriptionManager.client.gui.DeleteSubscriptionGroupDialogBox;

@@ -17,6 +17,10 @@ import de.hdm.subscriptionManager.client.LeftMenu;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 
+
+/*
+ * Klasse, über welche mittels einer DialogBox eine neue Sub-Group angelegt werden kann.
+ */
 public class CreateSubscriptionGroupDialogBox extends DialogBox {
 
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
@@ -34,6 +38,9 @@ public class CreateSubscriptionGroupDialogBox extends DialogBox {
     private SubscriptionGroup sGroup = new SubscriptionGroup();
 
 
+    /*
+     * Die onLoad Methode spezifiziert das anzuzeigende DialogPanel und fügt die einzelnen Elemente dem Panel hinzu.
+     */
     public void onLoad() {
 	submitButton.addClickHandler(new SubmitSubscriptionGroupClickHandler());
 	abortButton.addClickHandler(new AbortCreatingSubscriptionGroupClickHandler());
@@ -53,10 +60,13 @@ public class CreateSubscriptionGroupDialogBox extends DialogBox {
 	vPanel.add(buttonPanel);
 
 	this.add(vPanel);
-
-
     }
 
+
+    /*
+     * ClickHandler um bei einem Klick auf Submit einen RPC Call auszulösen, über welchen der eingegebene Gruppenname 
+     * zur Erstellung eines neuen Sub-Group Objektes welches dann in der Datenbank gespeichert wird.
+     */
     class SubmitSubscriptionGroupClickHandler implements ClickHandler {
 
 	@Override
@@ -69,12 +79,17 @@ public class CreateSubscriptionGroupDialogBox extends DialogBox {
 	}
     }
 
+
+    /*
+     * Callback als Ergebnis der Speicherung des Sub-Group Objektes in der DB. Die LeftMenu Klasse wird neu instantiiert mittels
+     * parametrisiertem Konstruktor, sodass die Gruppenansicht ausgelöst wird und das neu hinzugefügte Sub-Group Objekt in
+     * der CellList angezeigt wird.
+     */
     class CreateSubscriptionGroupCallback implements AsyncCallback<SubscriptionGroup> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-	    // TODO Auto-generated method stub
-
+	    Window.alert(caught.getMessage());
 	}
 
 	@Override
@@ -83,13 +98,14 @@ public class CreateSubscriptionGroupDialogBox extends DialogBox {
 	    hide();
 	}
     }
-    
+
+
     class AbortCreatingSubscriptionGroupClickHandler implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
 	    hide();
 	}
-	
+
     }
 }

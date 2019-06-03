@@ -27,6 +27,12 @@ import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.Range;
 import com.google.gwt.view.client.SelectionChangeEvent;
 
+/*
+ * Klasse um die einzelnen Abos die sich in einer Gruppe befinden zur Anzeige zu bringen. Die
+ * Klasse erbt von SubscriptionCellTable, in welcher die Eigenschaften und Spalten des CellTable 
+ * deklariert werden. Folgend werden die anzuzeigenden Daten geladen und in den CellTable
+ * eingefügt.
+ */
 public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
 
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
@@ -48,15 +54,30 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
     private SubscriptionCellTable.EndDateColumn endDateColumn = null;
     private SubscriptionCellTable.TotalCostColumn totalCostColumn = null;
 
+
+    /*
+     * Über den Standardkonstruktor wird der RPC-Call ausgelöst, der zu der selektierten
+     * Sub-Group im LeftMenu alle darin enthaltenen Subscriptions abfragt
+     */
     public ViewAllSubscriptionsOfGroup() {
 	this.subGroup = LeftMenu.getSelectedSubscriptionGroup();
 	subscriptionManagerAdmin.getAllSubscriptionsWithinGroup(subGroup.getId(), new GetAllSubscriptionsOfGroup());
     }
-    
+
+
+    /*
+     * Getter-Methode um die über das MultiSelectionModel selektierte Auswahl zu erfassen, welche
+     * in einer ArrayListe gespeichert wird.
+     */
     public static ArrayList<Subscription> getSelectedSubscriptionsOfTable() {
-	  return selectedSubscriptionsInTableArrayList;
+	return selectedSubscriptionsInTableArrayList;
     }
 
+
+    /*
+     * In der onLoad() Methode wird der CellTable an sich mit seinen einzelnen Spalten
+     * initialisiert und zur Anzeige gebracht.
+     */
     public void onLoad() {
 	allSubscriptionsCellTable = new SubscriptionCellTable();
 	checkColumn = allSubscriptionsCellTable.new CheckColumn(checkBoxCell);
@@ -66,7 +87,7 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
 	startDateColumn = allSubscriptionsCellTable.new StartDateColumn(clickCell);
 	endDateColumn = allSubscriptionsCellTable.new EndDateColumn(clickCell);
 	totalCostColumn = allSubscriptionsCellTable.new TotalCostColumn(clickCell);
-	
+
 
 	allSubscriptionsCellTable.addColumn(checkColumn);
 	allSubscriptionsCellTable.setColumnWidth(checkColumn, 2, Unit.EM);
@@ -82,7 +103,7 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
 	allSubscriptionsCellTable.setColumnWidth(endDateColumn, 14, Unit.EM);
 	allSubscriptionsCellTable.addColumn(totalCostColumn, "Gesamtkosten");
 	allSubscriptionsCellTable.setColumnWidth(totalCostColumn, 2, Unit.EM);
-	
+
 	allSubscriptionsCellTable.getSubscriptionSelectionModel().addSelectionChangeHandler(new SelectionChangeHandlerCellTable());
 
 	cellTableContainerPanel.add(allSubscriptionsCellTable);
@@ -91,12 +112,16 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
     }
 
 
+    /*
+     * Callback, welcher die einer Gruppe zugehörigen Abos als ArrayList zurückliefert. Diese
+     * Daten sind die Quellinformation des CellTables und werden diesem dann über setRowData()
+     * zugewiesen. 
+     */
     public class GetAllSubscriptionsOfGroup implements AsyncCallback<ArrayList<Subscription>> {
 
 	@Override
 	public void onFailure(Throwable caught) {
 	    Window.alert("Beim Laden der Daten ist ein Fehler aufgetreten" + caught.getMessage());
-
 	}
 
 	@Override
@@ -112,6 +137,12 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
 	}
     }
 
+
+    /*
+     * Innere Klasse welche das Interface SelectionChangeHandler implementiert um die 
+     * Useraktionen beim Klick auf die CheckBox am Anfang jeder Zeile zu registrieren.
+     * Die selektierte Auswahl wird in einer separaten ArrayList gespeichert.
+     */
     public class SelectionChangeHandlerCellTable implements SelectionChangeEvent.Handler {
 
 	@Override
@@ -120,7 +151,4 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
 	    selectedSubscriptionsInTableArrayList.addAll(allSubscriptionsCellTable.getSubscriptionSelectionModel().getSelectedSet());
 	}
     }
-    
-
-    
 }

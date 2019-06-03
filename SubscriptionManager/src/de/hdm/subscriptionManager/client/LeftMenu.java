@@ -28,6 +28,13 @@ import de.hdm.subscriptionManager.shared.bo.Subscription;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 import de.hdm.subscriptionManager.shared.bo.User;
 
+
+/*
+ * Klasse, welche das Selektionsmenü im linken Bereich der Seite umsetzt. Über zwei Toggle-Buttons wird
+ * entweder die Subscription Ansicht (einzelne Abos in der CellList) oder die Sub-Group View
+ * (Abogruppen in der CellList) angezeigt. Ein Klick auf ein Objekt löst dann die Anzeige eines Abos 
+ * oder einer Gruppe aus.
+ */
 public class LeftMenu extends VerticalPanel {
 
 
@@ -35,7 +42,7 @@ public class LeftMenu extends VerticalPanel {
     private HorizontalPanel subButtonPanel = new HorizontalPanel();
     private ToggleButton subButton = new ToggleButton();
     private ToggleButton subGroupButton = new ToggleButton();
-    
+
     private Subscription subscription = new Subscription();
     private static Subscription selectedSubscription = new Subscription();
     private SubscriptionGroup subscriptionGroup = new SubscriptionGroup();
@@ -51,6 +58,12 @@ public class LeftMenu extends VerticalPanel {
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
 
 
+    /*
+     * Standardkonstruktor der als Aktivator für den Toggle-Modus der Subscription dient. RPC-Call
+     * wird ausgeführt um alle angelegten Abos eines Nutzers zu erhalten sowie ein SingleSelectionModel
+     * implementiert, durch welches die Selektion eines NUtzers registriert werden kann und besagtes 
+     * Abo zur Anzeige gebracht werden kann.
+     */
     public LeftMenu() {
 	subButton.setValue(true);
 	subGroupButton.setValue(false);
@@ -77,11 +90,16 @@ public class LeftMenu extends VerticalPanel {
 	subCellListPanel.add(subscriptionCellList);
 	displayMenu();
     }
-    
+
+
+    /*
+     * Getter-Methode um das selektierte Subscription Objekt aus dem SingleSelectionModel auszulesen
+     */
     public static Subscription getSelectedSubscription() {
 	return selectedSubscription;
     }
-    
+
+
     /*
      * Konstruktor mit SubGroup Parameter, durch welchen im linken Men� dann die einzelnen
      * Gruppen angezeigt werden anstatt einzelner Abos
@@ -89,7 +107,7 @@ public class LeftMenu extends VerticalPanel {
     public LeftMenu(SubscriptionGroup subGroup) {
 	subButton.setValue(false);
 	subGroupButton.setValue(true);
-	
+
 	user.setId(1);
 	subscriptionManagerAdmin.getAllSubscriptionGroups(user.getId(), new getAllSubscriptionGroupsCallback());
 
@@ -108,17 +126,21 @@ public class LeftMenu extends VerticalPanel {
 		}
 	    }
 	});
-	
+
 	subCellListPanel.add(subscriptionGroupCellList);
 	displayMenu();
     }
-    
-    
+
+
+
+    /*
+     * Getter-Methode um das selektierte SubGroup Objekt aus dem SingleSelectionModel auszulesen
+     */
     public static SubscriptionGroup getSelectedSubscriptionGroup() {
 	return selectedSubscriptionGroup;
     }
-    
-    
+
+
     /*
      * Methode zur Erstellung und Zuordnung von Panels und ClickHandlern, welche G�ltigkeit
      * sowohl bei Sub als auch bei der SubGroup Anzeige haben
@@ -126,52 +148,53 @@ public class LeftMenu extends VerticalPanel {
     public void displayMenu() {
 	subButton.setText("Abos");
 	subGroupButton.setText("Abogruppen");
-//	subButton.setStylePrimaryName("subSelectionButton");
-//	subGroupButton.setStylePrimaryName("subSelectionButton");
 	subButtonPanel.add(subButton);
 	subButtonPanel.add(subGroupButton);
 	subButtonPanel.setStylePrimaryName("subSelectionButtonPanel");
 
-	
+
 	subButton.addClickHandler(new ClickHandler() {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
 		Menubar menuBar = new Menubar(subscription);
 		LeftMenu leftMenuSub = new LeftMenu();
-		SubscriptionAndGroupOverview subAndGroupOverview = new SubscriptionAndGroupOverview(subscription);
+		SubscriptionAndGroupOverview subscriptionOverview = new SubscriptionAndGroupOverview(subscription);
 		RootPanel.get("content").clear();
-		RootPanel.get("content").add(subAndGroupOverview);
+		RootPanel.get("content").add(subscriptionOverview);
 	    }
 	});
-	
+
 	subGroupButton.addClickHandler(new ClickHandler() {
 
 	    @Override
 	    public void onClick(ClickEvent event) {
 		Menubar menuBar = new Menubar(subscriptionGroup);
 		LeftMenu leftMenuSubGroup = new LeftMenu(subscriptionGroup); 
-
+		SubscriptionAndGroupOverview subGroupOverview = new SubscriptionAndGroupOverview(subscriptionGroup);
+		RootPanel.get("content").clear();
+		RootPanel.get("content").add(subGroupOverview);
 	    }
 	});
-	
+
 	menuContainerPanel.add(subButtonPanel);
 	subCellListPanel.setStylePrimaryName("leftMenuScrollPanel");
 	menuContainerPanel.add(subCellListPanel);
 	RootPanel.get("leftmenu").clear();
 	RootPanel.get("leftmenu").add(menuContainerPanel);
-	
+
     }
-    
+
     /*
-     * Async Callback f�r die Abfrage der Subs
+     * Async Callback für die Abfrage der Subscriptions. Die zurückgegebene ArrayList mit Subscription
+     * Objekten wird in eine lokale ArrayListe übernommen und der CellList als Datenquelle für
+     * die Anzeige der einzelnen Abos zugewiesen
      */
     class getAllSubscriptionsCallback implements AsyncCallback<ArrayList<Subscription>> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-	    // TODO Auto-generated method stub
-
+	    Window.alert(caught.getMessage());
 	}
 
 	@Override
@@ -181,20 +204,19 @@ public class LeftMenu extends VerticalPanel {
 		List<Subscription> list = subscriptionList;
 		subscriptionCellList.setRowData(0, list);
 	    }
-
 	}
-
     }
-    
+
     /*
-     * Async Callback f�r die Abfrage der SubGroups
+     * Async Callback f�r die Abfrage der SubGroups.  Die zurückgegebene ArrayList mit SubGroup
+     * Objekten wird in eine lokale ArrayListe übernommen und der CellList als Datenquelle für
+     * die Anzeige der einzelnen Abogruppen zugewiesen
      */
     class getAllSubscriptionGroupsCallback implements AsyncCallback<ArrayList<SubscriptionGroup>> {
 
 	@Override
 	public void onFailure(Throwable caught) {
-	    // TODO Auto-generated method stub
-	    
+	    Window.alert(caught.getMessage());
 	}
 
 	@Override
@@ -206,36 +228,37 @@ public class LeftMenu extends VerticalPanel {
 	    }
 	}
     }
-    
+
+
     /*
-     * Klasse f�r die Anzeige der Abos in einer Zelle
+     * Statische Klasse für die Anzeige des entsprechenden Wertes aus dem Subscription Objekt
+     * in einer Zelle. 
      */
     static class SubscriptionCell extends AbstractCell<Subscription> {
 
 	@Override
 	public void render(Context context, Subscription value, SafeHtmlBuilder sb) {
-		
+
 	    if (value == null) {
-			return;
-		}
-		sb.appendEscaped(value.getName());
+		return;
+	    }
+	    sb.appendEscaped(value.getName());
 	}
     }
-    
+
+
     /*
-     * Klasse f�r die Anzeige der Abogruppe in einer Zelle
+     * Statische Klasse für die Anzeige des entsprechenden Wertes aus dem SubGroup Objekt
+     * in einer Zelle. 
      */
     static class SubscriptionGroupCell extends AbstractCell<SubscriptionGroup> {
 
 	@Override
 	public void render(Context context, SubscriptionGroup value, SafeHtmlBuilder sb) {
 	    if (value == null) {
-			return;
-		}
-		sb.appendEscaped(value.getName());
+		return;
+	    }
+	    sb.appendEscaped(value.getName());
 	}
-	
     }
-
-
 }
