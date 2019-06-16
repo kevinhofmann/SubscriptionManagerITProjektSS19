@@ -32,15 +32,6 @@ public class DeleteSubscriptionDialogBox extends DialogBox {
     
     public void onLoad() {
 	this.subscription = LeftMenu.getSelectedSubscription();
-	if(subscription.getId() > 0) {
-	    showDialogPanel();
-	} else {
-	    Window.alert("Bitte wähle zunächst eine Abogruppe aus");
-	    hide();
-	}
-    }
-    
-    public void showDialogPanel() {
 	submitButton.addClickHandler(new DeleteSubscriptionClickHandler());
 	abortButton.addClickHandler(new AbortDeletingSubscriptionClickHandler());
 	this.setText("Abo löschen");
@@ -50,6 +41,7 @@ public class DeleteSubscriptionDialogBox extends DialogBox {
 	
 	buttonPanel.add(submitButton);
 	buttonPanel.add(abortButton);
+	buttonPanel.setStylePrimaryName("buttonPanelBox");
 
 	nameLabel = new HTML("Soll das Abo " + subscription.getName() + " gelöscht werden?");
 	vPanel.add(nameLabel);

@@ -57,6 +57,13 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
 	user.setMail(mail);
 	return this.userMapper.createUser(user);
     }
+    
+    public User checkEmail(String eMail) throws IllegalArgumentException {
+	User user = new User();
+	user.setMail(eMail);
+	return null;
+	
+    }
 
     @Override
     public Subscription createSubscription(String name, float price, String note, java.util.Date startDate, Boolean cancellationRelevance,
@@ -176,6 +183,12 @@ public class SubscriptionManagerImpl extends RemoteServiceServlet implements Sub
     public ArrayList<Subscription> getAllSubscriptionsWithinGroup(int groupId) throws IllegalArgumentException {
 	
 	return this.subscriptionMapper.getAllSubscriptionsWithinGroup(groupId);
+    }
+    
+    @Override
+    public SubscriptionSubscriptionGroup checkSubscriptionToGroupBelonging(int subscriptionId, int groupId) throws IllegalArgumentException {
+	
+	return this.subscriptionSubscriptionGroupMapper.checkSubscriptionBelonging(subscriptionId, groupId);
     }
 
 }

@@ -1,1 +1,103 @@
 @charset "ISO-8859-1";
+
+.cellTableWidget {
+  overflow: scroll;
+  width: auto;
+}
+.cellTableFirstColumn {
+  
+}
+.cellTableLastColumn {
+  
+}
+.cellTableFooter {
+  border-top: 2px solid #6f7277;
+  padding: 3px 15px;
+  text-align: left;
+  color: black;
+  text-shadow: #ddf 1px 1px 0;
+  overflow: hidden;
+}
+.cellTableHeader {
+  border-bottom: 1px solid #2a2a2a;
+  padding: 1px 15px;
+  font-size: 1.0em;
+  text-align: left;
+  color: #3b3b3b;
+  overflow: hidden;
+  font-weight: 600;
+  text-shadow: none;
+}
+.cellTableCell {
+  padding: 2px 15px;
+  overflow: hidden;
+  height: 25px;
+  font-size: 1.0em;
+  color: #3b3b3b;
+  border: 0px;
+}
+.cellTableFirstColumnFooter {
+  
+}
+.cellTableFirstColumnHeader {
+	
+}
+.cellTableLastColumnFooter {
+  
+}
+.cellTableLastColumnHeader {
+  
+}
+.cellTableSortableHeader {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.cellTableSortedHeaderAscending {
+}
+.cellTableSortedHeaderDescending {
+}
+.cellTableOddRow {
+  background: #ffffff;
+    border: 0px solid #ffffff;
+}
+.cellTableOddRowCell {
+
+}
+.cellTableEvenRow {
+  background: #f3f7fb;
+  border: 0px solid #f3f7fb;
+}
+.cellTableEvenRowCell {
+
+}
+.cellTableHoveredRow {
+  background: #f2f2f2;
+}
+
+.cellTableKeyboardSelectedRow {
+  background: #ffe6cc;
+  border: 0px solid #ff6300 !important;
+}
+.cellTableKeyboardSelectedRowCell {
+  border: 0px solid #ffffff !important;
+}
+.cellTableSelectedRow {
+  background: #ffd9b3;
+  height: auto;
+  overflow: auto;
+  border: 0px solid #80bfff;
+}
+
+.cellTableSelectedRowCell {
+  border: 0px solid #ffffff !important;
+}
+/**
+ * The keyboard selected cell is visible over selection.
+ */
+.cellTableKeyboardSelectedCell {
+}
+
+.cellTableLoading {
+  margin: 30px;
+}

@@ -65,4 +65,43 @@ public class UserMapper {
 	return user;
 
     }
+    
+    
+    public User findUserByEmail(String email) {
+	
+	Connection con = DBConnection.connection();
+	
+	User user = new User();
+	
+	try {
+	    
+	    PreparedStatement stmt = con.prepareStatement("SELECT * FROM user WHERE `email` = ?" );
+	    
+	    stmt.setString(1, email);
+	    ResultSet rs = stmt.executeQuery();
+	    
+	    if(rs.next()) {
+		User u = new User();
+		user.setId(rs.getInt("userid"));
+		user.setFirstName(rs.getString("firstName"));
+		user.setLastName(rs.getString("lastName"));
+		user.setMail(rs.getString("email"));
+		
+		user = u;
+		}
+	} catch (SQLException e2) {
+		e2.printStackTrace();
+	}
+
+	finally {
+		if (con != null)
+			try {
+				con.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
+	return user;
+	
+}
 }

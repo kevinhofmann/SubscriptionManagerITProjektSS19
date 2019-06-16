@@ -242,6 +242,7 @@ public class SubscriptionMapper {
 		
 		result.add(sub);
 	    }
+	    System.out.println("Catched all Subs within Group");
 	
 	} catch(SQLException e) {
 	    e.printStackTrace();

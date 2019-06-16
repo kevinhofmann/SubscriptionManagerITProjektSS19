@@ -33,12 +33,12 @@ public class SubscriptionCellTable extends CellTable<Subscription> {
     private User user = new User();
     private DateTimeFormat dateTimeFormat = DateTimeFormat.getFormat("dd.MM.yyyy");
     private Cancellation cancellation = new Cancellation();
-
+    
     public SubscriptionCellTable() {
 	this.setSelectionModel(subscriptionSelectionModel, selectionEventManager);
 	run();
     }
-
+    
     public MultiSelectionModel<Subscription> getSubscriptionSelectionModel() {
 	return subscriptionSelectionModel;
     }
@@ -131,10 +131,13 @@ public class SubscriptionCellTable extends CellTable<Subscription> {
 	    long numberOfDays = diff / (1000*60*60*24);
 	    double dailyPrice;
 	    dailyPrice = subscription.getPrice() / 30;
+	    subscription.setExpensesSinceStart(Math.round(100.0 * dailyPrice * numberOfDays) / 100.0);
 	    return Double.toString(Math.round(100.0 * dailyPrice * numberOfDays) / 100.0) + " €";
 
 	}
     }
+
+
 
 
 

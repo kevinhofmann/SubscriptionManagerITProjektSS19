@@ -72,6 +72,8 @@ body {
 	position: absolute;
 }
 
+
+
 h1 {
   font-size: 2em;
   font-weight: bold;
@@ -87,6 +89,51 @@ h2 {
 	font-weight: lighter;
 }
 
+.welcomeFont {
+	margin-top: 30px;
+	font-size: 2.2em !important;
+		font-family: 'Fredoka One', cursive;
+		color: #666666;
+}
+
+.formHeadline {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+#content > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > div:nth-child(1) {
+	text-align: end;
+	font-size: 1.1em;
+	font-style: italic; 
+	margin-right: 2em;
+	margin-top: 15px;
+}
+
+.statisticOverview {
+	font-size: 14px;
+	font-weight: bolder;
+}
+
+.statisticOverviewItalic {
+	font-size: 14px;
+	font-style: italic;
+}
+
+.statisticOverviewFlexTable {
+		line-height: 25px;
+}
+
+.statisticCancellationOverviewFlexTable {
+	line-height: 25px;
+}
+
+.statisticOverviewPanel > tbody:nth-child(1) > tr:nth-child(2) {
+	height: 8em;
+}
+
+.statisticOverviewPanel > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(1) > div:nth-child(1) {
+	line-height: 50px;
+}
 
 /** BUTTONS */
 
@@ -132,7 +179,7 @@ h2 {
 	height: 2.5em;
 	border-radius: 2px !important;;
 	border: 0px !important;
-	color: #141401;
+	color: #000000;
 	font-weight: 600;
 	font-size: 1.1em;
 	text-align: center;
@@ -148,13 +195,13 @@ h2 {
 	height: 2.5em;
 	border-radius: 2px !important;;
 	border: 0px !important;
-	color: #000000;
+	color: #303003;
 	font-weight: 600;
 	font-size: 1.1em;
 	text-align: center;
 	opacity: 0.8;
 	margin: 2px 2px !important;
-	box-shadow: inset 0 0 2px #000000;
+	box-shadow: inset 0 0 6px #994d00;
 	display: inline-grid;
 	align-items: center;
 }
@@ -165,7 +212,7 @@ h2 {
 	height: 2.5em;
 	border-radius: 2px !important;;
 	border: 0px !important;
-	color: #303003;
+	color: #000000;
 	font-weight: 600;
 	font-size: 1.1em;
 	text-align: center;
@@ -181,17 +228,62 @@ h2 {
 	height: 2.5em;
 	border-radius: 2px !important;;
 	border: 0px !important;
-	color: #000000;
+	color: #303003;
 	font-weight: 600;
 	font-size: 1.1em;
 	text-align: center;
 	opacity: 0.8;
 	margin: 2px 2px !important;
-	box-shadow: inset 0 0 2px #000000;
+	box-shadow: inset 0 0 6px #994d00;
 	display: inline-grid;
 	align-items: center;
 }
 
+.gwt-Button {
+	font-size: 1em;
+	width: 100px;
+	border-radius: 6px;
+	border: 1px solid #d9d9d9 !important;
+	cursor: pointer;
+	color: #2c2c2c !important;
+	background-color: whitesmoke !important;
+	padding: 6px 0px 6px 0px !important;
+	text-shadow: 0px 1px 1px #ffffff !important;
+	text-align: center;
+	background-image: none !important;
+	margin-right: 5px !important;
+	box-shadow: 1px 1px #999;
+}
+
+
+.gwt-Button:hover {
+	transform: scale(1.02);
+	box-shadow: inset 1px 1px 1px 1px #f2f2f2 !important;
+	background-color: white !important;
+}
+
+.calculateCancellationDateButton {
+	margin-left: 7px;
+	height: 27px;
+	font-size: 0.9em;
+	width: 80px;
+	border-radius: 6px;
+	border: 1px solid #d9d9d9 !important;
+	cursor: pointer;
+	color: #2c2c2c !important;
+	background-color: whitesmoke !important;
+	padding: 6px 0px 6px 0px !important;
+	text-shadow: 0px 1px 1px #ffffff !important;
+	text-align: center;
+	background-image: none !important;
+	margin-right: 5px !important;
+	box-shadow: 1px 1px #999;
+}
+
+.calculateCancellationDateButton:hover {
+	box-shadow: inset 1px 1px 1px 1px #f2f2f2 !important;
+	background-color: white !important;
+}
 
 /** PANELS */
 
@@ -199,6 +291,9 @@ h2 {
 	height: 44em;
 }
 
+#content > table:nth-child(1) {
+	display: block;
+}
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
   width: 400px;
@@ -217,6 +312,64 @@ h2 {
   margin: 15px 6px 6px;
 }
 
+/** DIALOGBOX */
+.gwt-DialogBox .dialogMiddleCenter {
+	width: 400px;
+	height: 100px;
+}
+
+.gwt-DialogBox .Caption {
+	background: white;
+	cursor: default;
+	border-bottom: 1px solid #bbbbbb;
+	border-top: 5px solid #d0e4f6;
+	text-align: center;
+}
+
+.gwt-DialogBox {
+	max-width: 500px;
+	height: auto;
+}
+
+.gwt-DialogBox .dialogContent {
+	width: auto;
+	margin: auto auto;
+	padding: 20px 20px 20px 20px;
+	margin-left: 50px;
+	margin-right: 50px;
+}
+
+.gwt-DialogBox .dialogMiddleCenter {
+	padding: 15px;
+	background: white;
+	margin-left: 40px;
+}
+
+.gwt-DialogBox .dialogMiddleCenterInner table tbody tr {
+	display: table;
+	margin: auto auto;
+	width: 100%;
+}
+
+.gwt-DialogBox .dialogMiddleCenterInner table table {
+	width: 100%;
+}
+
+.gwt-DialogBox .dialogMiddleCenterInner table tbody tr:last-child {
+	display: table;
+	margin: auto auto;
+	margin-top: 10px;
+}
+
+.buttonPanelBox {
+	margin: auto auto;
+}
+
+.buttonPanelBox table tbody tr td:last-child {
+	width: inherit;
+	margin: auto auto;
+	display: table;
+}
 
 /** MENUBAR */
 
@@ -237,8 +390,8 @@ h2 {
 }
 
 .gwt-MenuBar .gwt-MenuItem-selected {
-   background-color: #eeeeee!important;
-   background-image: none !important;
+   background: linear-gradient(to top right, #ffa166 0%, #ff914d 100%) !important;
+   	border: 0px !important;
 }
 
 .gwt-MenuBar-horizontal {
@@ -252,6 +405,7 @@ h2 {
 	text-align: center;
 	opacity: 0.8;
 	margin-left: 2px;
+	width: 70px;
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItem {
@@ -261,6 +415,17 @@ h2 {
    line-height: 25px;
    font-size: 14px;
    width: 5rem;
+}
+
+#menubar > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(5) > div:nth-child(1) {
+	margin-left: 4em !important;
+	width: 5em !important;
+}
+
+#gwt-uid-5:hover {
+	background: linear-gradient(to top right, #ffa166 0%, #ff914d 100%) !important;
+   	border: 0px !important;
+   	height: inherit !important;
 }
 
 .gwt-MenuBar-horizontal .gwt-MenuItemSeparator {
@@ -278,43 +443,6 @@ h2 {
    background: white; 
 }
 
-.gwt-MenuBar-vertical {
-   margin-top: 0px;
-   margin-left: 0px;
-   background: white;
-}
-
-.gwt-MenuBar-vertical table {
-   border-collapse: collapse;
-}
-
-.gwt-MenuBar-vertical .gwt-MenuItem {
-   padding: 5px 40px 5px 5px !important;
-   font-family: 'Ubuntu', sans-serif !important;
-   font-weight: 300 !important;
-   font-size: calc !important;
-}
-
-.gwt-MenuBar-vertical .gwt-MenuItemSeparator {
-   padding: 2px 0px;
-}
-
-.gwt-MenuBar-vertical .gwt-MenuItemSeparator .menuSeparatorInner {
-   height: 1px;
-   padding: 0px;
-   border: 0px;
-   border-top: 1px solid #ccc;
-   overflow: hidden;
-}
-
-.gwt-MenuBar-vertical .subMenuIcon {
-   padding-right: 4px;
-}
-
-.gwt-MenuBar-vertical .subMenuIcon-selected {
-   background: #E3E8F3;
-}
-
 .disabledMenuBar {
    padding: 5px 40px 5px 5px !important;
    font-family: 'Ubuntu', sans-serif !important;
@@ -327,4 +455,23 @@ h2 {
 .gwt-PopupPanelGlass{
     height:15000 px;
     width:15000 px;
+}
+
+
+.subscriptionViewTable {
+	line-height: 25px;
+}
+
+.subscriptionEditTable {
+	width: 40em;
+	height: 25em;
+}
+
+.subscriptionViewTableFont {
+	font-size: 1.25em;
+	font-weight: bold;
+}
+
+.buttonPanel {
+	margin-top:20px;
 }

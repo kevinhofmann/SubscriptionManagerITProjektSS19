@@ -2,6 +2,7 @@ package de.hdm.subscriptionManager.client.gui;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -12,12 +13,14 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import de.hdm.subscriptionManager.client.LoginInfo;
+import de.hdm.subscriptionManager.client.SubscriptionManager;
 import de.hdm.subscriptionManager.client.ClientsideSettings;
-import de.hdm.subscriptionManager.client.LeftMenu;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
+import de.hdm.subscriptionManager.shared.bo.User;
 
-public class EditSubscriptionGroupDialogBox extends DialogBox {
+public class CreateUserDialogBox extends DialogBox {
 
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
 
@@ -25,69 +28,80 @@ public class EditSubscriptionGroupDialogBox extends DialogBox {
     private HorizontalPanel buttonPanel = new HorizontalPanel();
     private FlexTable dialogFlexTable = new FlexTable();
 
-    private Button submitButton = new Button("Übernehmen");
+    private Button submitButton = new Button("Anlegen");
     private Button abortButton = new Button("Abbrechen");
-    private TextBox nameOfGroup = new TextBox();
+    private TextBox firstName = new TextBox();
+    private TextBox lastName = new TextBox();
 
     private Label infoLabel = new Label();
 
     private SubscriptionGroup sGroup = new SubscriptionGroup();
+    
+    private String googleMail = "";
+    
+	private LoginInfo loginInfo = null;
 
 
-
+    public CreateUserDialogBox(String email) {
+	googleMail = email;
+    }
+    
+    /*
+     * Die onLoad Methode spezifiziert das anzuzeigende DialogPanel und fügt die einzelnen Elemente dem Panel hinzu.
+     */
     public void onLoad() {
-	this.sGroup = LeftMenu.getSelectedSubscriptionGroup();
-	submitButton.addClickHandler(new SubmitSubscriptionGroupClickHandler());
-	abortButton.addClickHandler(new AbortEditingSubscriptionGroupClickHandler());
-	this.setText("Abogruppe umbenennen");
+	submitButton.addClickHandler(new SubmitCreatedUserClickHandler());
+	abortButton.addClickHandler(new AbortClickHandler());
+	this.setText("Neue Abogruppe anlegen");
 	this.setGlassEnabled(true);
 	this.setAnimationEnabled(true);
 	this.setAutoHideEnabled(true);
 
-	infoLabel.setText("Neue Bezeichnung: ");
+	infoLabel.setText("Vor- und Nachname:");
 	buttonPanel.add(submitButton);
 	buttonPanel.add(abortButton);
 
 	dialogFlexTable.setWidget(0, 0, infoLabel);
-	dialogFlexTable.setWidget(0, 1, nameOfGroup);
-	nameOfGroup.setText(sGroup.getName());
+	dialogFlexTable.setWidget(0, 1, firstName);
+	dialogFlexTable.setWidget(0, 2, lastName);
 
 	vPanel.add(dialogFlexTable);
 	vPanel.add(buttonPanel);
 
 	this.add(vPanel);
     }
-
-
-    class SubmitSubscriptionGroupClickHandler implements ClickHandler {
+    
+    class SubmitCreatedUserClickHandler implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
-	    if(nameOfGroup.getText().length() > 3) {
-		sGroup.setName(nameOfGroup.getText());
-		subscriptionManagerAdmin.updateSubscriptionGroup(sGroup, new EditSubscriptionGroupCallback());
-	    } else {
-		Window.alert("Bitte wähle einen anderen Namen (länger als 3 Zeichen)");
-	    }
+	    subscriptionManagerAdmin.createUser(firstName.getText(), lastName.getText(), googleMail, new CreateUserCallback());
+	    
 	}
+	
     }
-
-    class EditSubscriptionGroupCallback implements AsyncCallback<Void> {
+    
+    class CreateUserCallback implements AsyncCallback<User> {
 
 	@Override
 	public void onFailure(Throwable caught) {
 	    // TODO Auto-generated method stub
-
+	    
 	}
 
 	@Override
-	public void onSuccess(Void result) {
-	    LeftMenu leftMenu = new LeftMenu(sGroup);
-	    hide();
+	public void onSuccess(User result) {
+	    Window.alert("User erfolgreich erstellt");
+		Cookies.setCookie("signout", loginInfo.getLogoutUrl());
+		Cookies.setCookie("email", result.getMail());
+		Cookies.setCookie("id", result.getId() + "");
+		hide();
+		SubscriptionManager.loadSubscriptionManager(loginInfo);
 	}
+	
     }
-
-    class AbortEditingSubscriptionGroupClickHandler implements ClickHandler {
+    
+    class AbortClickHandler implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
@@ -96,4 +110,3 @@ public class EditSubscriptionGroupDialogBox extends DialogBox {
 
     }
 }
-

@@ -1,6 +1,6 @@
 package de.hdm.subscriptionManager.client.gui;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 
 import com.google.gwt.cell.client.Cell;
@@ -13,8 +13,10 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 
 import de.hdm.subscriptionManager.client.ClientsideSettings;
 import de.hdm.subscriptionManager.client.LeftMenu;
@@ -42,7 +44,10 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
     private CheckboxCell checkBoxCell = new CheckboxCell(true, false);
     private ArrayList<Subscription> allSubscriptionsByGroupArrayList = new ArrayList<>();
     private static ArrayList<Subscription> selectedSubscriptionsInTableArrayList = new ArrayList<>();
-
+    private Double totalSum = 0.0;
+    private Date today = new Date();
+    private Double totalSumOfGroupExpenes = 0.0;
+    
     private SubscriptionGroup subGroup = new SubscriptionGroup();
 
     private SubscriptionCellTable allSubscriptionsCellTable = null;
@@ -90,7 +95,7 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
 
 
 	allSubscriptionsCellTable.addColumn(checkColumn);
-	allSubscriptionsCellTable.setColumnWidth(checkColumn, 2, Unit.EM);
+	allSubscriptionsCellTable.setColumnWidth(checkColumn, 1.5, Unit.EM);
 	allSubscriptionsCellTable.addColumn(nameColumn, "Name");
 	allSubscriptionsCellTable.setColumnWidth(nameColumn, 12, Unit.EM);
 	allSubscriptionsCellTable.addColumn(priceColumn, "Preis");
@@ -105,12 +110,17 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
 	allSubscriptionsCellTable.setColumnWidth(totalCostColumn, 2, Unit.EM);
 
 	allSubscriptionsCellTable.getSubscriptionSelectionModel().addSelectionChangeHandler(new SelectionChangeHandlerCellTable());
-
+	
 	cellTableContainerPanel.add(allSubscriptionsCellTable);
+
 	RootPanel.get("content").clear();
 	RootPanel.get("content").add(cellTableContainerPanel);
     }
 
+    public void addTotalExpensesLabel() {
+	cellTableContainerPanel.add(new Label("Gesamtausgaben: " + Double.toString(Math.round(100.0 * totalSumOfGroupExpenes) /100.0) + " €"));
+	
+    }
 
     /*
      * Callback, welcher die einer Gruppe zugehörigen Abos als ArrayList zurückliefert. Diese
@@ -131,9 +141,16 @@ public class ViewAllSubscriptionsOfGroup extends SubscriptionCellTable {
 	    allSubscriptionsByGroupArrayList.clear();
 	    for(Subscription sub : result) {
 		allSubscriptionsByGroupArrayList.add(sub);
+
+		 long numberOfDays = Math.abs(CalendarUtil.getDaysBetween(sub.getStartDate(), today));
+		 double dailyPrice;
+		 dailyPrice = sub.getPrice() / 30;
+		 sub.setExpensesSinceStart(Math.round(100.0 * dailyPrice * numberOfDays) / 100.0);
+		 totalSumOfGroupExpenes += sub.getExpensesSinceStart();
 	    }
 	    allSubscriptionsCellTable.setRowCount(allSubscriptionsByGroupArrayList.size(), true);
 	    allSubscriptionsCellTable.setRowData(0, allSubscriptionsByGroupArrayList);
+	    addTotalExpensesLabel();
 	}
     }
 

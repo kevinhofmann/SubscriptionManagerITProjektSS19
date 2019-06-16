@@ -8,10 +8,12 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 import de.hdm.subscriptionManager.client.ClientsideSettings;
 import de.hdm.subscriptionManager.client.LeftMenu;
+import de.hdm.subscriptionManager.client.SubscriptionManager;
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
 import de.hdm.subscriptionManager.shared.bo.SubscriptionGroup;
 
@@ -33,15 +35,6 @@ public class DeleteSubscriptionGroupDialogBox extends DialogBox {
     
     public void onLoad() {
 	this.sGroup = LeftMenu.getSelectedSubscriptionGroup();
-	if(sGroup.getId() > 0) {
-	    showDialogPanel();
-	} else {
-	    Window.alert("Bitte wähle zunächst eine Abogruppe aus");
-	    hide();
-	}
-    }
-
-    public void showDialogPanel() {
 	submitButton.addClickHandler(new DeleteSubscriptionGroupClickHandler());
 	abortButton.addClickHandler(new AbortDeletingSubscriptionGroupClickHandler());
 	this.setText("Abogruppe umbenennen");
@@ -79,6 +72,7 @@ public class DeleteSubscriptionGroupDialogBox extends DialogBox {
 	    @Override
 	    public void onSuccess(Void result) {
 		LeftMenu leftMenu = new LeftMenu(sGroup);
+		RootPanel.get("content").clear();
 		hide();
 	    }
 	}

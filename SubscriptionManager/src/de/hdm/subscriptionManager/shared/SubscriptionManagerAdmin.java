@@ -26,6 +26,8 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	
 	public User createUser(String firstName, String lastName, String mail) throws IllegalArgumentException;
 	
+	public User checkEmail(String eMail) throws IllegalArgumentException;
+	
 	public Subscription createSubscription(String name,float price, String note, java.util.Date startDate, Boolean cancellationRelevance, int userID) throws IllegalArgumentException;
 	
 	public SubscriptionGroup createSubscriptionGroup(String name, int userID) throws IllegalArgumentException;
@@ -59,4 +61,7 @@ public interface SubscriptionManagerAdmin extends RemoteService {
 	public ArrayList<SubscriptionGroup> getAllSubscriptionGroups(int userId) throws IllegalArgumentException;
 	
 	public ArrayList<Subscription> getAllSubscriptionsWithinGroup(int groupId) throws IllegalArgumentException;
+
+	public SubscriptionSubscriptionGroup checkSubscriptionToGroupBelonging(int subscriptionId, int groupId) throws IllegalArgumentException;
 }
+

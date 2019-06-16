@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -36,7 +37,9 @@ public class SubscriptionAndGroupOverview extends VerticalPanel {
     private ArrayList<Subscription> subscriptionArrayList = new ArrayList<>();
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
     private Double sumOfExpenses = 0.0;
-    private Label headline = new Label("Kostenübersicht");
+    private Label cheapestSub = new Label("");
+    private Label mostExpensiveSub = new Label("");
+    private Label otherSubsToBeCancelledLabel = new Label("Verbleibende Tage bis zum Kündigungstag aller anderen Abos:");
     private FlexTable overviewFlexTable = new FlexTable();
     private FlexTable cancellationOverviewFlexTable = new FlexTable();
     private HTML detailInformationLabel = new HTML();
@@ -49,9 +52,13 @@ public class SubscriptionAndGroupOverview extends VerticalPanel {
     /*
      * Parametrisierter Konstruktor, der als Parameter ein Sub-Objekt erwartet. Alle vom User angelegten Subscriptions werden
      * anschließend mittels RPC-Call abgefragt.
-     */
+     */    
     public SubscriptionAndGroupOverview(Subscription subscription) {
-	subscriptionManagerAdmin.getAllSubscriptions(1, new GetAllSubscriptionsCallback());
+	if(subscriptionArrayList.size() > 0) {
+	    constructSubscriptionInfoTable();
+	} else {
+		subscriptionManagerAdmin.getAllSubscriptions(1, new GetAllSubscriptionsCallback());
+    }
     }
     
     
@@ -65,25 +72,33 @@ public class SubscriptionAndGroupOverview extends VerticalPanel {
      */
     public void constructSubscriptionInfoTable() {
 	detailInformationLabel = new HTML("Für deine Abos sind bisher Kosten von insgesamt " + sumOfExpenses + " € entstanden.");
-	overviewFlexTable.setWidget(0, 0, headline);
+	detailInformationLabel.setStylePrimaryName("statisticOverview");
+	cheapestSub.setText(getCheapestSubscription(subscriptionArrayList).getName());
+	mostExpensiveSub.setText(getMostExpensiveSubscription(subscriptionArrayList).getName());
+	cheapestSub.setStylePrimaryName("statisticOverviewItalic");
+	mostExpensiveSub.setStylePrimaryName("statisticOverviewItalic");
 	overviewFlexTable.setWidget(2, 0, new Label("Das teuerste Abo: "));
-	overviewFlexTable.setWidget(2, 1, new Label(getMostExpensiveSubscription(subscriptionArrayList).getName()));
+	overviewFlexTable.setWidget(2, 1, mostExpensiveSub);
 	overviewFlexTable.setWidget(3, 0, new Label("Das günstigste Abo: "));
-	overviewFlexTable.setWidget(3, 1, new Label(getCheapestSubscription(subscriptionArrayList).getName()));
-
+	overviewFlexTable.setWidget(3, 1, cheapestSub);
+	overviewFlexTable.setStylePrimaryName("statisticOverviewFlexTable");
+	overviewFlexTable.getColumnFormatter().setWidth(0, "130px");
 	/*
 	 * For-Schleife um aus zwei ArrayLists (eins enthält Subscription Objekte, das andere Cancellation Objekte) 
 	 * die Informationen zu den verbleibenden Tagen bis zum Kündigungstag anzuzeigen.
 	 */
 	int row = 0;
-	for(int i = 0; i<cancellationInfoArrayList.size(); i++) {
+	for(int i = 1; i<cancellationInfoArrayList.size(); i++) {
 	    int column = 0;
 	    cancellationOverviewFlexTable.setWidget(row, column, new Label(sortedSubscriptionList.get(i).getName()));
 	    cancellationOverviewFlexTable.setWidget(row, column+1, new Label(Long.toString(cancellationInfoArrayList.get(i).getDaysRemainingCancellationDate())));
 	    row++;
 	}
-
+	
 	cancellationLabel = new HTML("Dein Abo " + sortedSubscriptionList.get(0).getName() + " muss bis in " + cancellationInfoArrayList.get(0).getDaysRemainingCancellationDate() + " Tagen gekündigt sein.");
+	cancellationLabel.setStylePrimaryName("statisticOverview");
+	cancellationOverviewFlexTable.setStylePrimaryName("statisticCancellationOverviewFlexTable");
+	cancellationOverviewFlexTable.getColumnFormatter().setWidth(0, "130px");
 	addWidgetsToPanel();
     }
     
@@ -95,7 +110,11 @@ public class SubscriptionAndGroupOverview extends VerticalPanel {
 	vPanel.add(detailInformationLabel);
 	vPanel.add(overviewFlexTable);
 	vPanel.add(cancellationLabel);
+	if(subscriptionArrayList.size() > 0) {
+	    vPanel.add(otherSubsToBeCancelledLabel);
+	}
 	vPanel.add(cancellationOverviewFlexTable);
+	vPanel.setStylePrimaryName("statisticOverviewPanel");
 	RootPanel.get("content").clear();
 	RootPanel.get("content").add(vPanel);
     }
@@ -116,10 +135,11 @@ public class SubscriptionAndGroupOverview extends VerticalPanel {
 
 	@Override
 	public void onSuccess(ArrayList<Subscription> result) {
-	    subscriptionManagerAdmin.getAllCancellationInfoByUserId(1, new CancellationCallback());
 	    for(Subscription sub : result) {
 		subscriptionArrayList.add(sub);
 	    }
+	    subscriptionManagerAdmin.getAllCancellationInfoByUserId(1, new CancellationCallback());
+
 	    calculateCosts(subscriptionArrayList);
 	}
     }
@@ -139,6 +159,7 @@ public class SubscriptionAndGroupOverview extends VerticalPanel {
 	    @Override
 	    public void onSuccess(ArrayList<SubscriptionGroup> result) {
 		detailInformationLabel = new HTML("Es sind insgesamt " + result.size() + " Gruppen angelegt.");
+		detailInformationLabel.setStylePrimaryName("statisticOverview");
 		addWidgetsToPanel();
 	    } 
 	}

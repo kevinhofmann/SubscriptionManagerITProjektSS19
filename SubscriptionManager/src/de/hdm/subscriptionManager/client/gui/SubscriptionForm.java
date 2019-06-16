@@ -50,6 +50,7 @@ public class SubscriptionForm extends VerticalPanel {
     private Date startDate = new Date();
 
     private HorizontalPanel datePicker = new HorizontalPanel();
+    private HorizontalPanel cancellationDateCalculationPanel = new HorizontalPanel();
     private TextBox day = new TextBox();
     private TextBox month = new TextBox();
     private TextBox year = new TextBox();
@@ -138,9 +139,7 @@ public class SubscriptionForm extends VerticalPanel {
      * Methode, welche den FlexTable zur Anzeige des Formulares generiert. Hier wird lediglich die Basis des Formulares
      * erzeugt, die TextBoxen werden separat erzeugt.
      */
-    public FlexTable constructTable() {
-
-	formTable.setWidget(0, 0, headline);
+    public FlexTable constructTableLayout() {
 
 	formTable.setWidget(1, 0, nameLabel);
 
@@ -207,8 +206,12 @@ public class SubscriptionForm extends VerticalPanel {
 
 	formButtonPanel.add(submit);
 	formButtonPanel.add(reset);
+	formButtonPanel.setStylePrimaryName("buttonPanel");
 	formTable.setWidget(11, 1, formButtonPanel);
+	textBoxPanel.add(headline);
+	headline.setStylePrimaryName("formHeadline");
 	textBoxPanel.add(formTable);
+	formTable.setStylePrimaryName("subscriptionEditTable");
 
 	return formTable;
     }
@@ -219,7 +222,7 @@ public class SubscriptionForm extends VerticalPanel {
      * TextBoxen für die Nutzereingabe zu erzeugen und dem Table hinzuzufügen. 
      */
     protected void onLoad() {
-	constructTable();
+	constructTableLayout();
 
 	formTable.setWidget(1, 1, name);
 
@@ -234,8 +237,10 @@ public class SubscriptionForm extends VerticalPanel {
 	formTable.setWidget(7, 1, cancellationPeriod);
 	cancellationPeriod.setWidth("20px");
 
-	formTable.setWidget(8, 1, cancellationDatePicker);
-	formTable.setWidget(8, 2, calculateCancellationDateButton);
+	cancellationDateCalculationPanel.add(cancellationDatePicker);
+	cancellationDateCalculationPanel.add(calculateCancellationDateButton);
+	calculateCancellationDateButton.setStylePrimaryName("calculateCancellationDateButton");
+	formTable.setWidget(8, 1, cancellationDateCalculationPanel);
 
 	calculateCancellationDateButton.addClickHandler(new calculateCancellationDateClickHandler());
 
@@ -265,8 +270,13 @@ public class SubscriptionForm extends VerticalPanel {
 		    cancellationYearCalc --;
 		}
 	    }
+	    if(cancellationMonthCalc < 10) {
+		String withZero = "0" + cancellationMonthCalc;
+		cancellationMonth.setText(withZero);
+	    } else {
+		cancellationMonth.setText(Integer.toString(cancellationMonthCalc));
+	    }
 	    cancellationDay.setText(expirationDay.getText());
-	    cancellationMonth.setText(Integer.toString(cancellationMonthCalc));
 	    cancellationYear.setText(Integer.toString(cancellationYearCalc));
 	}
     }

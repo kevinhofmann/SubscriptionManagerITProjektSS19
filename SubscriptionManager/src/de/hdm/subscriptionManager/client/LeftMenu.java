@@ -159,9 +159,7 @@ public class LeftMenu extends VerticalPanel {
 	    public void onClick(ClickEvent event) {
 		Menubar menuBar = new Menubar(subscription);
 		LeftMenu leftMenuSub = new LeftMenu();
-		SubscriptionAndGroupOverview subscriptionOverview = new SubscriptionAndGroupOverview(subscription);
-		RootPanel.get("content").clear();
-		RootPanel.get("content").add(subscriptionOverview);
+
 	    }
 	});
 
@@ -171,9 +169,9 @@ public class LeftMenu extends VerticalPanel {
 	    public void onClick(ClickEvent event) {
 		Menubar menuBar = new Menubar(subscriptionGroup);
 		LeftMenu leftMenuSubGroup = new LeftMenu(subscriptionGroup); 
-		SubscriptionAndGroupOverview subGroupOverview = new SubscriptionAndGroupOverview(subscriptionGroup);
-		RootPanel.get("content").clear();
-		RootPanel.get("content").add(subGroupOverview);
+//		SubscriptionAndGroupOverview subGroupOverview = new SubscriptionAndGroupOverview(subscriptionGroup);
+//		RootPanel.get("content").clear();
+//		RootPanel.get("content").add(subGroupOverview);
 	    }
 	});
 

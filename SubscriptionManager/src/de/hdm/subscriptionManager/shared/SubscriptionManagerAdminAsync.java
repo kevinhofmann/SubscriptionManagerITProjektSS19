@@ -17,6 +17,8 @@ public interface SubscriptionManagerAdminAsync {
 
     void createUser(String firstName, String lastName, String mail, AsyncCallback<User> callback);
 
+    void checkEmail(String eMail, AsyncCallback<User> callback);
+    
     void deleteSubscription(Subscription s, AsyncCallback<Void> callback);
 
     void updateSubscriptionGroup(SubscriptionGroup sg, AsyncCallback<Void> callback);
@@ -51,4 +53,6 @@ public interface SubscriptionManagerAdminAsync {
     void getAllSubscriptionGroups(int userId, AsyncCallback<ArrayList<SubscriptionGroup>> callback);
 
     void getAllSubscriptionsWithinGroup(int groupId, AsyncCallback<ArrayList<Subscription>> callback);
+
+    void checkSubscriptionToGroupBelonging(int subscriptionId, int groupId, AsyncCallback<SubscriptionSubscriptionGroup> callback);
 }

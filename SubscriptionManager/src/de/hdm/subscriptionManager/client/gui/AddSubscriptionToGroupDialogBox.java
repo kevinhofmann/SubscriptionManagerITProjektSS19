@@ -38,6 +38,7 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
     private Button abortButton = new Button("Abbrechen");
 
     private Subscription subscription = new Subscription();
+    private SubscriptionGroup selectedSubscriptionGroup = new SubscriptionGroup();
 
     private ListBox subscriptionGroupListBox = new ListBox();
     private ArrayList<SubscriptionGroup> subscriptionGroupArrayList = new ArrayList<>();
@@ -51,12 +52,7 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
      */
     public void onLoad() {
 	this.subscription = LeftMenu.getSelectedSubscription();
-	if(subscription.getId() > 0) {
 	    subscriptionManagerAdmin.getAllSubscriptionGroups(1, new GetAllSubscriptionGroupsCallback());
-	} else {
-	    Window.alert("Bitte wähle zunächst eine Abogruppe aus");
-	    hide();
-	}
     }
 
 
@@ -76,6 +72,8 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
 
 	nameLabel = new HTML("Abogruppe auswählen, um das Abo " + subscription.getName() + " einzufügen");
 	vPanel.add(subscriptionGroupListBox);
+	subscriptionGroupListBox.setWidth("200px");
+	subscriptionGroupListBox.setMultipleSelect(false);
 	vPanel.add(nameLabel);
 	vPanel.add(buttonPanel);
 
@@ -120,13 +118,35 @@ public class AddSubscriptionToGroupDialogBox extends DialogBox {
 
 	    for(SubscriptionGroup sg:subscriptionGroupArrayList) {
 		if(sg.getName() == subscriptionGroupListBox.getSelectedItemText()) {
-		    subscriptionManagerAdmin.addSubscriptionToGroup(subscription, sg, new AddSubscriptionToGroupCallback());
+		    selectedSubscriptionGroup = sg;
+		    subscriptionManagerAdmin.checkSubscriptionToGroupBelonging(subscription.getId(), selectedSubscriptionGroup.getId(), new GetSubToGroupBelongingCallback());
 		}
 	    }
 	}
 
     }
+    
+    
+    class GetSubToGroupBelongingCallback implements AsyncCallback<SubscriptionSubscriptionGroup> {
 
+	@Override
+	public void onFailure(Throwable caught) {
+	    // TODO Auto-generated method stub
+	    
+	}
+
+	@Override
+	public void onSuccess(SubscriptionSubscriptionGroup result) {
+	    if(result.getSubscriptionID() > 0) {
+		Window.alert("Das Abo " + subscription.getName() + " ist bereits in der Gruppe " + selectedSubscriptionGroup.getName() + "!");
+	    } else {
+		subscriptionManagerAdmin.addSubscriptionToGroup(subscription, selectedSubscriptionGroup, new AddSubscriptionToGroupCallback());
+	    }
+	    
+	}
+	
+    }
+    
 
     /*
      * Callback als Ergebnis der Speicherung eines Sub-Objektes in einer Sub-Group.

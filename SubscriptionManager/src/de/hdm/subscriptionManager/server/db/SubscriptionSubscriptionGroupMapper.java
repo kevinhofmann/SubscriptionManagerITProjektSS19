@@ -2,7 +2,11 @@ package de.hdm.subscriptionManager.server.db;
 
 import java.sql.Connection;
 import java.sql.Statement;
+
+import com.google.gwt.user.client.Window;
+
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import de.hdm.subscriptionManager.shared.bo.SubscriptionSubscriptionGroup;
@@ -82,5 +86,45 @@ public class SubscriptionSubscriptionGroupMapper {
 //			e.printStackTrace();
 //		}
 //	}
+    }
+    
+    
+    public SubscriptionSubscriptionGroup checkSubscriptionBelonging(int subscriptionId, int groupId) {
+	
+	Connection con = DBConnection.connection();
+	
+	SubscriptionSubscriptionGroup result = new SubscriptionSubscriptionGroup();
+	try {
+	    
+	    PreparedStatement stmt = con.prepareStatement("SELECT * FROM subscriptionmapping WHERE `subscriptionid` = ? AND `groupid` = ? ");
+	
+	    stmt.setInt(1, subscriptionId);
+	    stmt.setInt(2, groupId);
+	    
+	    ResultSet rs = stmt.executeQuery();
+	    
+	    while(rs.next()) {
+		SubscriptionSubscriptionGroup subSubGroup = new SubscriptionSubscriptionGroup();
+		subSubGroup.setUserID(rs.getInt("userid"));
+		subSubGroup.setSubscriptionID(rs.getInt("subscriptionid"));
+		subSubGroup.setSubscriptionGroupID(rs.getInt("groupid"));
+		result= subSubGroup;
+		
+		System.out.println("Subscription belonging checked");
+	    }
+	}
+	catch(SQLException e2) {
+	    e2.printStackTrace();
+	}
+//	finally {	
+//		if (con!=null) 
+//			try {
+//				con.close();
+//			}
+//			catch(SQLException e) {
+//				e.printStackTrace();
+//			}
+//		}
+	return result;
     }
 }

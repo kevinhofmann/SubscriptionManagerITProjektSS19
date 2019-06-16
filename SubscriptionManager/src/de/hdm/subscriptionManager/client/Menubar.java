@@ -1,10 +1,7 @@
 package de.hdm.subscriptionManager.client;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import de.hdm.subscriptionManager.shared.SubscriptionManagerAdminAsync;
@@ -22,25 +19,25 @@ public class Menubar extends MenuBar {
     private static SubscriptionManagerAdminAsync subscriptionManagerAdmin = ClientsideSettings.getSubscriptionManagerAdmin();
     
     private Subscription subscription = new Subscription();
+    private SubscriptionGroup subGroup = new SubscriptionGroup();
     
-    private MenuBar menubar = new MenuBar();
     private MenuBar addMenu = new MenuBar();
     private MenuBar editMenu = new MenuBar();
     private MenuBar deleteMenu = new MenuBar();
     private MenuBar manageGroupMenu = new MenuBar();
+    private MenuBar statisticsOverview = new MenuBar();
     
     private HorizontalPanel menuBarHorizontalPanel = new HorizontalPanel();
     
-    private MenuItem createSubscription = new MenuItem("Neues Abo anlegen", new MenuBarCommand.CreateSubscriptionCommand());
-    private MenuItem createSubscriptionGroup = new MenuItem("Neue Abogruppe anlegen", new MenuBarCommand.CreateSubscriptionGroupCommand());
-    private MenuItem editSubscription = new MenuItem("Abo bearbeiten", new MenuBarCommand.EditSubscriptionCommand());
-    private MenuItem editSubscriptionGroup = new MenuItem("Abogruppe bearbeiten", new MenuBarCommand.EditSubscriptionGroupCommand());
-    private MenuItem deleteSubscription = new MenuItem("Abo entfernen", new MenuBarCommand.DeleteSubscriptionCommand());
-    private MenuItem deleteSubscriptionGroup = new MenuItem("Abogruppe löschen", new MenuBarCommand.DeleteSubscriptionGroupCommand());
-    private MenuItem addSubscriptionToGroup = new MenuItem("Abo zur Gruppe", new MenuBarCommand.AddSubscriptionToGroupCommand());
-    private MenuItem removeSubscriptionFromGroup = new MenuItem("Abo aus Gruppe entfernen", new MenuBarCommand.RemoveSubscriptionFromGroupCommand());
-
-    
+    final String statsImage = "<img src=\"images/statistic.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
+    final String addSubImage = "<img src=\"images/add-sub.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
+    final String editSubImage = "<img src=\"images/edit-sub.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
+    final String deleteSubImage = "<img src=\"images/delete-sub.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
+    final String addGroup = "<img src=\"images/add-group.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
+    final String editGroup = "<img src=\"images/edit-group.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
+    final String deleteGroup = "<img src=\"images/delete-group.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
+    final String intoGroup = "<img src=\"images/intoGroup.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
+    final String outOfGroup = "<img src=\"images/outOfGroup.png\" height='25px' width='24px' style=\"display: block; margin: auto\">";
     /*
      * Über verschiedene Konstruktoren, auch parametrisierte, werden die zugrundeliegenden Commands gesteuert.
      * Ist im LeftMenu der ToggleButton auf Subscription true, so wird entsprechend ein Subscription
@@ -54,18 +51,20 @@ public class Menubar extends MenuBar {
     public Menubar(Subscription sub) {
 	this.subscription = sub;
 	MenuBarCommand mbc = new MenuBarCommand(subscription);
-	addMenu.addItem("Neu", new MenuBarCommand.CreateSubscriptionCommand());
-	editMenu.addItem("Bearbeiten", new MenuBarCommand.EditSubscriptionCommand());
-	deleteMenu.addItem("Löschen", new MenuBarCommand.DeleteSubscriptionCommand());
-	manageGroupMenu.addItem("Hinzufügen", new MenuBarCommand.AddSubscriptionToGroupCommand());
+	addMenu.addItem(addSubImage, true, new MenuBarCommand.CreateSubscriptionCommand());
+	editMenu.addItem(editSubImage, true, new MenuBarCommand.EditSubscriptionCommand());
+	deleteMenu.addItem(deleteSubImage, true, new MenuBarCommand.DeleteSubscriptionCommand());
+	manageGroupMenu.addItem(intoGroup, true, new MenuBarCommand.AddSubscriptionToGroupCommand());
 	run();
     }
     
     public Menubar(SubscriptionGroup subGroup) {
-	addMenu.addItem("Neu", new MenuBarCommand.CreateSubscriptionGroupCommand());
-	editMenu.addItem("Bearbeiten", new MenuBarCommand.EditSubscriptionGroupCommand());
-	deleteMenu.addItem("Löschen", new MenuBarCommand.DeleteSubscriptionGroupCommand());
-	manageGroupMenu.addItem("Entfernen", new MenuBarCommand.RemoveSubscriptionFromGroupCommand());
+	this.subGroup = subGroup;
+	MenuBarCommand mbc = new MenuBarCommand(subGroup);
+	addMenu.addItem(addGroup, true, new MenuBarCommand.CreateSubscriptionGroupCommand());
+	editMenu.addItem(editGroup, true, new MenuBarCommand.EditSubscriptionGroupCommand());
+	deleteMenu.addItem(deleteGroup, true, new MenuBarCommand.DeleteSubscriptionGroupCommand());
+	manageGroupMenu.addItem(outOfGroup, true, new MenuBarCommand.RemoveSubscriptionFromGroupCommand());
 	run();
     }
     
@@ -74,7 +73,9 @@ public class Menubar extends MenuBar {
 	menuBarHorizontalPanel.add(editMenu);
 	menuBarHorizontalPanel.add(deleteMenu);
 	menuBarHorizontalPanel.add(manageGroupMenu);
-	menuBarHorizontalPanel.add(menubar);
+	statisticsOverview.addItem(statsImage, true, new MenuBarCommand.DisplayStatisticOverview());
+	//statisticsOverview.addItem("Statistik", new MenuBarCommand.DisplayStatisticOverview());
+	menuBarHorizontalPanel.add(statisticsOverview);
 	RootPanel.get("menubar").clear();
 	RootPanel.get("menubar").add(menuBarHorizontalPanel);
     }
